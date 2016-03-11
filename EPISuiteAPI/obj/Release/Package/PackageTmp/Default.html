@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <script src="Scripts/jquery-1.10.2.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $("#btnShowJSON").click(function () {
+
+                var jsn = buildJSON();
+                var sval = JSON.stringify(jsn);
+
+                $("#txtJSON").val(sval);
+            });
+
+            $("#btnRun").click(function () {
+
+                var jsn = buildJSON();              
+
+                $.ajax({
+                    url: getBaseURL() + "/epiSuiteCalcs/logKowEstimate",
+                    type: "POST",
+                    data: JSON.stringify(jsn),
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: function (retVal) {
+                        var sval = JSON.stringify(retVal);
+                        $("#txtOutput").val(sval);                        
+                    },
+                    error:function(xhr, retVal) {
+                        $("#txtOutput").val(xhr.status + " " + xhr.statusText);
+                    },
+
+                });                
+            });
+
+            function buildJSON()
+            {
+                var actions = [];
+                var jsn = {};
+                var substrate = $("#txtSubstrate").val();
+                jsn.structure = substrate;
+                //alert(jsn);
+                return jsn;
+            }            function getBaseURL()            {
+                return window.location.origin;
+            }        })
+    </script>
+
+
+</head>
+<body>
+    <div>
+        <table>
+            <tr>
+                <td>Substrate</td>
+            </tr>
+            <tr>
+                <td class="style1"><input type="text" value="c1ccccc1" id="txtSubstrate" style="width: 300px"/></td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td>
+                    <textarea rows="4" cols="50" id="txtJSON">This is the original text for JSON.</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button id="btnShowJSON">Show JSON</button>
+                </td>
+            </tr>
+            <tr style="height:30px"></tr>  
+            <tr>
+                <td>
+                    <textarea rows="4" cols="50" id="txtOutput">This is the original text for output.</textarea>
+                </td>
+            </tr>           
+            <tr>
+                <td>
+                    <button id="btnRun">Run</button>
+                </td>
+            </tr>
+
+        </table>
+
+</div>
+</body>
+</html>
