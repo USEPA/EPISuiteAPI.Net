@@ -186,22 +186,6 @@ namespace EPISuiteAPI.Controllers
         }
 
 
-        [Route("boilingPtDegCMeasured")]
-        [HttpPost]
-        public HttpResponseMessage boilingPtDegCMeasured(Chemical chemical)
-        {
-            try
-            {
-                EPIReader epiReader = new EPIReader();
-                ChemicalProperties chemProps = epiReader.GetMeasuredProperties("epiwin1.exe", chemical.structure);
-                epiReader.Close();
-                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateResponse(System.Net.HttpStatusCode.InternalServerError, ex.Message);
-            }
-        }
 
         [Route("measured")]
         [HttpPost]
