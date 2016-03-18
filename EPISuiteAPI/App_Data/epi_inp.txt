@@ -1,0 +1,17 @@
+CALCULATE
+c1ccccc1
+Name of Chemical
+(null)
+(null)
+(null)
+(null)
+(null)
+0 
+1
+1
+5
+0.5
+1
+0.05
+(null)
+0

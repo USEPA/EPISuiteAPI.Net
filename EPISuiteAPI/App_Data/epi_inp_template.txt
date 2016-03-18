@@ -1,0 +1,17 @@
+CALCULATE
+(smiles)
+(null)
+(null)
+(null)
+(null)
+(melting_point)
+(null)
+0 
+1
+1
+5
+0.5
+1
+0.05
+(log_kow)
+0
