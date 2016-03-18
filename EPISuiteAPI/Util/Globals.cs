@@ -31,6 +31,14 @@ namespace EPISuiteAPI.Util
         public const string KOC_EXE             = "pckocnt.exe";
         public const string KOC_EST             = "Soil Adsorption Coef (Koc)";
 
+        public const string BOILING_POINT       = "boiling_point";
+        public const string MELTING_POINT       = "melting_point";
+        public const string VAPOR_PRESSURE      = "vapor_pressure";
+        public const string WATER_SOLUBILITY    = "water_solubility";
+        public const string HENRY_LAW           = "henrys_law_constant";
+        public const string LOG_KOW             = "log_kow";
+        public const string LOG_KOC             = "log_koc";
+
 
     }
 }

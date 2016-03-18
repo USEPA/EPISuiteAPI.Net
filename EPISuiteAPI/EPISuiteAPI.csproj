@@ -224,6 +224,7 @@
     <Compile Include="Util\Globals.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\epi_inp_template.txt" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -281,7 +282,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Views\epiSuiteCalcs\" />
     <Folder Include="Views\Test\" />
   </ItemGroup>

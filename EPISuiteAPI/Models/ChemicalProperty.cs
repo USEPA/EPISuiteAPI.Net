@@ -16,8 +16,10 @@ namespace EPISuiteAPI.Models
     {
         public ChemicalProperties()
         {
-            properties = new List<ChemicalProperty>();
+            //properties = new List<ChemicalProperty>();
+            properties = new Dictionary<string, ChemicalProperty>();
         }
-        public List<ChemicalProperty> properties{get; set;}
+        //public List<ChemicalProperty> properties{get; set;}
+        public Dictionary<string,ChemicalProperty> properties { get; set; }
     }
 }
