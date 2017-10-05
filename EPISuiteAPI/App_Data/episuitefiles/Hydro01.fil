@@ -1,0 +1,461 @@
+~HELPANHYDRIDES
+
+ -C-C(=O)-O-C(=O)-C-
+
+    Acid anhydrides react with water to form the corresponding acid.
+    Neutral hydrolysis half-lives of some Anhydrides (25 deg C,
+      Bunton et al, 1963; Bunton & Fenndler, 1965, Hawkins, 1975):
+       Acetic:   4.3 min          Phthalic:  1.5 minutes
+       Succinic: 4.3 min          Benzoic :  27.8 minutes
+       Glutaric: 4.4 minutes      Trimethylacetic anhydride: 24.2 hours
+
+    Branching may slow the hydrolysis rate.
+    Hydrolysis rate increases with pH.
+
+
+~HELPBENZYLHALIDES
+    Neutral hydrolysis half-lives of various Benzyl Halides (25 deg C)
+     (Mabey and Mill, 1978; Laidler and Martin, 1969):
+       Benzyl chloride:  15 hrs
+       p-CH3 Benzyl chloride: 0.43 hrs
+       p-CL Benzyl chloride: about 30 hrs
+       p-NO2 Benzyl chloride: about 150-200 hrs
+       Benzyl bromide:  1.32 hrs
+       p-CH3 Benzyl bromide: 4.3 min
+       Benzyl dichloride:  0.1 hrs
+       Benzyl trichloride:  19 sec
+
+    Ring substituents that may slow the hydrolysis rate:
+          include CL, Br, I, NO2, cyano
+
+
+~HELPSULFONYLUREAS
+
+  R'-S(=O)(=O)-N-C(=O)-N-R"
+
+    Experimental data are available for many sulfonyl urea pesticides where
+    R" is a pyrimidine or triazine ring with various substituents. The bridge
+    of the sulfonylurea is typically cleaved to form a sulfonamide, an amino-
+    heterocyclic and carbon dioxide. Contraction of the bridge can also yield
+    primary hydrolysis metabolites.
+
+    Measured hydrolysis rates of the sulfonylurea function in pesticides are
+    approximately as follows:
+                        Half-Life (in days)
+                       ---------------------
+       pH4 - pH5       less than 1 - 20 days
+           pH7             100 - 300+ days
+           pH9             similar to pH7
+
+    See the on-line User Guide help file for experimental rate data.
+
+
+~HELPSULFONYLHALIDES
+
+   R-S(=O)(=O)-Halogen (Cl, Br, I, F)
+
+    Experimental data are available for a series of sulfonyl chlorides where
+    the  R  is a benzene ring with various substituents.  First-order
+    experimental rate constants (25 deg C) range from 0.000462 to 0.00657
+    per second which correspond to half-lives of 1.76 to 25 minutes.
+
+    Unsubstituted benzene sulfonyl chloride has a half-life of 3.9 minutes.
+    The half-life increases with nitro, cyano or halide subsituents on the
+    ring.  The half-life decreases with methyl or methoxy substituents.
+
+    See the on-line User Guide help file experimental rate data.
+
+
+~HELPTHIOESTERS
+
+  -C-C(=O)-S-C-
+
+    Very limited experimental data suggest the hydrolysis rates of these
+    thioesters MAY be similar to the rates of plain esters (-C-C(=O)-O-C-);
+    hydrolysis is base-catalyzed and increases with increasing pH,
+    especially at pH8 and above.  Replacing the sulfur atom with an oxygen
+    atom in the SMILES will estimate the hydrolysis rate for the plain
+    ester.
+
+     Experimental Half-Lives at 20-25 deg C (Pesticide Manual):
+        Acibenzolar-S-methyl (CAS 135158-54-2):
+              pH5 (3.8 yr), pH7 (23 weeks), pH9 (19.4 hr)
+        MCPA-thioethyl (CAS 25319-90-8):
+              acidic media (stable), pH7 (22 days), pH9 (2 days)
+
+
+~HELPTHIOESTERS2
+
+  -C-C(=S)-O-C-
+
+    Experimental data were not available for this type of thioester.
+    Hydrolysis rates MAY be similar to the rates of plain esters
+    (-C-C(=O)-O-C-) with respect to base-catalyzed hydrolysis and
+    increasing hydroylsis rates above pH7.
+
+
+~HELPAMIDES
+
+  -C-C(=O)-N-C-
+
+    With the exception of a few halogenated acetamides, most amides
+    hydrolyze to acids extremely slowly at 25 degC and pH7 with half-lives
+    measured in centuries. Electronegative groups on carbon or nitrogen
+    greatly accelerate base catalyzed hydrolysis, but alkyl groups on
+    nitrogen retard both acid and base catalyzed processes. No neutral
+    hydrolysis is evident (Mabey and Mill, 1978).  Selected amides
+    half-lives include:
+                        Half-Live (in years at 25C, pH7)
+        Acetamide                3950
+        Chloroacetamide          1.46
+        Dichloroacetamide        0.73
+        Trichloroacetamide       0.23
+        N-Methylacetamide        38000
+
+    Additional experimental amide data are available in the HYDRO on-line
+    User Guide (help file).
+
+
+~HELPISOCYANATES
+
+  -N=C=O
+
+    Isocyanates hydrolyze readily in water to yield a carbamic acid, which
+    decarboxylates to produce CO2 and an amine; the latter immediately
+    reacts with more isocyanate to yield a disubstituted urea. The hydrolysis
+    rate increases with electron-withdrawing substituents. Steric hindrance
+    also influences hydrolysis rate; aliphatic isocyanate rates are:
+    primary > secondary > tertiary  (Ullmann's Encycl, A14:611-613).
+
+    Even at low pHs, hydrolysis Half-Life < 10 minutes (25 deg C)
+          Experimental Hydrolysis Half-Lifes (HSDB, 2007):
+            Methyl isocyanate:   9 minutes (25 deg C)
+            Phenyl isocyanate:   55 seconds (water/dioxane solution)
+
+
+~HELPISOTHIOCYANATES
+
+  -N=C=S
+
+    Isothiocyanate is a hydrolyzable function, however, the hydrolysis rate
+    in water appears to be much slower than isocyanates (based on limited
+    experimental data).
+
+       Experimental Hydrolysis (Pesticide Manual; Geddes et al, 1994):
+          Methyl isothiocyanate (half-life, 25 dec C):
+            pH4-pH5: 3.5-15 days      pH9: 4.6-9.0 days
+            pH7: 20.4-65 days         pH10: 0.7 days
+
+
+~HELPACYLHALIDES
+
+  R-C(=O)-halogen {Cl, Br, I, F}
+    (where R is a carbon or halogen)
+
+    Acyl halides react readily (some violently) with water to yield the
+    parent acid and hydrogen halide. For example, acetyl chloride hydrolyzes
+    to yield acetic acid and hydrochloric acid. Hydrolysis half-lives are
+    less than 10 minutes (or faster).
+
+     Experimental Half-Lives at 25 deg C (HSDB, 2007; Mabey & Mill, 1978):
+          Acetyl chloride:   0.8 seconds
+          Benzoyl chloride:  16 seconds
+
+
+~HELPUREA
+
+  R-N-C(=O)-N-R
+    (where R is an alkyl, aromatic carbon or hydrogen substituent(s))
+
+    These types of ureas hydrolyze slowly with half-lives generally > 1 year.
+    See the on-line User Guide help file for experimental rate data of
+    normal urea pesticides.
+
+
+~HELPOXIMES
+
+  R-C=N-O-R
+    (where R is an alkyl, aromatic carbon or hydrogen substituent(s))
+
+   Experimental hydrolysis data for various pesticides containing this
+   function indicate the hydrolysis is acid-catalyzed with the following
+   approximate half-lives (25 deg C):
+            pH4-pH5: < 1 to 10.5 days
+            pH7: 113 to 300 days
+            pH9: 300 days or longer
+      Experimental oxime data are available in the HYDRO on-line
+      User Guide (help file).
+
+
+~HELPALKOXYSILANES
+
+  [Si]-(O-alkyl)
+
+    Hydrolysis of alkoxysilanes is both acid and base-catalyzed (Osterholtz
+    and Pohl, 1992; Mill and Tse, 1989). Rates are slowest near pH7.
+
+    Experimental hydrolysis half-lives for various alkoxysilanes are as
+    follows (25 deg C)(Osterholtz and Pohl, 1992; Mill and Tse, 1989):
+            pH4:  1.1 to 24 min
+            pH5:  13 to 155 min
+            pH7:  28 to 504 min
+            pH9:  0.04 to 340 min
+      Experimental alkoxysilane data are available in the HYDRO on-line
+      User Guide (help file).
+
+
+~HELPHALOSILANES
+
+  [Si]-(halogen)
+
+    Alkyl and aryl halogenated silanes hydrolyze on contact with water
+    (Kirk-Othmer, 1st ed, 12:377 (1954)).  They hydrolyze to silanols
+    to a degree reflecting the amount of hindrance offered by the organic
+    groups attached to the same silicon atom.
+
+
+~HELPLITHIUM
+
+  [Li]-(carbon)
+
+    Organolithium compounds are compounds in which the lithium is bonded
+    directly to carbon. These compounds are reactive to oxygen and moisture
+    and may ignite spontaneously on exposure to air (Kirk-Othmer, 4th ed,
+    15: 453 (1995)). Reaction of butyllithium and water yields butane and
+    lithium hydroxide.
+
+
+~HELPALUMINUM
+
+  [Al]-(carbon)
+
+    Organoaluminum compounds are compounds in which the aluminum is bonded
+    directly to carbon with carbon part of an organic radical. The lower
+    alkylaluminums, alkylaluminum chlorides and alkylaluminum hydrides
+    react violently with oxygen (spontaneous flammability in air)and
+    explosively on contact with water. The halides are less easily hydrolyzed
+    than the trialkylaluminums (Kirk-Othmer, 4th ed., 2:266-7 (1992)).
+
+
+~HELPSODIUM
+
+  [Na]-(carbon)
+
+    Organosodium compounds are compounds in which the sodium is bonded
+    directly to carbon. These compounds are generally ionic in character
+    with the carbon in the form of a carbanion. They generally ignite
+    spontaneously on exposure to air and react violently with water (Ullmann,
+    vol A24:341, 1993).
+
+
+~HELPPOTASSIUM
+
+  [K]-(carbon)
+
+    Organopotassium compounds are compounds in which the potassium is bonded
+    directly to carbon. These compounds are generally ionic in character
+    with the carbon in the form of a carbanion. They generally ignite
+    spontaneously on exposure to air and react violently with water (Ullmann,
+    vol A24:341, 1993).
+
+
+~HELPMAGNESIUM
+
+  [Mg]-(carbon)
+
+    Organomagnesium compounds are compounds in which the magnesium is bonded
+    directly to carbon. These compounds are sensitive to air (oxygen) and
+    water (sometimes ignite spontaneously) (Ullmann, vol A15:624, 1990).
+    Magnesium alkyls react vigorously with water (Kirk-Othmer, 4th ed,
+    15:676, 1995).
+
+
+~HELPHALOAMINES
+
+  N-halogen {F, Cl, Br, I}
+
+    Halogen in N-haloamines is formally positive (oxidation state +1).
+    These compounds hydrolyze in water yielding hypohalous acid (Kirk-
+    Othmer, 4th ed, 5:911-913 (1993)).
+
+
+~HELPNPHENYLIMIDE
+
+  -C-C(=O)-N(-Phenyl{aromatic})-C(=O)-C-
+
+     Experimental Half-Lives at 25 deg C (Katagi,1989; Pesticide Manual):
+        N-Phenyl-tetrahydrophthalimide:
+             pH5 (4.14 days), pH7 (9.14 hr), pH9 (14.5 min)
+        Flumioxazin (CAS 103361-09-7)(temp not reported):
+             pH5 (4.2 days), pH7 (1 day), pH9 (0.01 days)
+        Fluoroimide (CAS 041205-21-4)(temp not reported):
+             pH3 (52.9 min), pH7 (7.5 min), pH8 (1.4 min)
+        Procymidone (CAS 032809-16-8):
+             pH8 (0.79 days), pH10.1 (0.016 days)
+
+
+~HELPCARBONATES
+
+  -C-O-C(=O)-O-C-
+
+     The lower carbonate esters are hydrolyzed very slowly by water and are
+     generally considered stable. Under alkaline conditions, the rate of
+     hydrolysis increases and the hydrolysis rate is similar to the
+     corresponding acetic acid ester (Kirk-Othmer, 4th ed, 5:89, 1993; Kirk-
+     Othmer, 1st ed, 3:153, 1954).
+
+
+~HELPCYCLICESTERS
+
+  -C-C(=O)-O-C...
+   |____________|
+
+     QSARs are not currently available to estimate hydrolysis rates for
+     cyclic carboxlic acid esters.  Rates may be similar to non-cyclic
+     esters; however, steric hindrance and ring strain effects may be
+     important.
+         Butyrolactone (a 5-member ring) hydrolyzes very slowly in neutral
+     water with the hydrolysis rate increasing in alkaline conditions (Kirk-
+     Othmer, 4th ed, 1:212, 1991).  In contrast, Propiolactone (a 4-member
+     ring) has a reported neutral rate constant of 0.0000568/sec at 25 deg
+     (Gold & Butler, 1962) which corresponds to a half-life of 3.39 days.
+
+
+~HELPNNCARBAMATE
+
+  =N-N-C(=O)-O-C-
+
+     Based on limited data shown below, these types of carbamates are
+     relatively stable in acidic or neutral conditions with hydrolysis
+     rates increasing with alkaline conditions.
+
+     Experimental Half-Lives at 25 deg C (Pesticide Manual; USDA PPDB):
+        Oxadiazon (CAS 19666-30-9):
+              pH5 (124 days), pH7 (stable), pH9 (38 days)
+        Oxadiargyl (CAS 39807-15-3):
+              pH5 (stable), pH7 (stable), pH9 (7.3 days)
+
+
+~HELP_NNCARBAMATE
+
+  C=N-N-C(=O)-O-C-
+
+     Based on limited data shown below, these types of carbamates hydrolyze
+     at neutral conditions with hydrolysis rates increasing with alkaline
+     conditions.
+
+     Experimental Half-Lives at 25 deg C (Pesticide Manual; Ellington,1987):
+        Bifenazate (CAS 149877-41-8):
+              pH5 (5.4 days), pH7 (0.8 days), pH9 (0.08 days)
+        Ethyl N-methylnitrosocarbamate (CAS 615-53-2):
+              pH7 (1 day), pH9 (0.5 days), pH10 (0.05 days)
+
+
+~HELP_CONCARBAMATE
+
+  -C(=O)-N-C(=O)-O-C-
+
+     Based on limited data shown below, these types of carbamates hydrolyze
+     at neutral conditions with hydrolysis rates increasing with alkaline
+     conditions.
+
+     Experimental Half-Lives at 25 deg C (Melkebeke et al,1986; Pesticide
+                                           Manual, 2003):
+        Vinclozolin (CAS 50471-44-8):
+              pH5 (45.1 days), pH7 (0.56 days), pH9 (0.066 days)
+        Famoxadone (CAS 131807-57-3):
+              pH5 (41 days), pH7 (2 days), pH9 (0.0646 days)
+        Chlozolinate (CAS 84332-86-5):
+              pH6.9 (1.3-2.0 minutes)
+
+
+~HELP_SNCARBAMATE
+
+  -C-O-C(=O)-N-S-
+
+     Based on limited data shown below, these types of carbamates hydrolyze
+     faster at acidic pHs than alkaline pHs (in contrast to most other types
+     of carbamates).
+
+     Experimental Half-Lives (Pesticide Manual, 2003):
+        Carbosulfan (CAS 55285-14-8):
+              pH5 (0.2 hr), pH7 (11.4 hr), pH9 (173.3 hr)
+        Furathiocarb (CAS 65907-30-4):
+              pH9 (4 days)
+        Asulam (CAS 3337-71-1):
+              pH8.5 (stable)
+
+
+~HELP_NOCARBAMATE
+
+  -C-N-C(=O)-O-N=
+
+     Measured data for various pesticides indicate these types of carbamates
+     hydrolyze with increasing rates over the pH range 5 to 9.  Approximate
+     half-lives at room temperatures are:
+                  Half-Life (in days)
+                  --------------------------------------------------
+           pH5    greater than a month to greater than several years
+           pH7    range of several days to a year
+           pH9    less than one day to several months
+
+    See the on-line User Guide help file for experimental rate data.
+
+
+~HELP_THIOCARBAMATE
+
+  -C-S-C(=O)-N-C
+
+     The common thiocarbamate function hydrolyzes very slow at environmental
+     pHs with half-lives greater than 100 days.
+
+     Experimental Half-Lives (Pesticide Manual, 2003; UDSA Pesticide DB):
+        Butylate (CAS 2008-41-5): pH5-pH9:  630 days (25 deg C)
+        Diallate (CAS 2303-16-4):  pH7: 1607 days
+        Pebulate (CAS 1114-71-2):  pH4-pH10: 11-12 days (40 deg C), which
+                                   extrapolates to > 150 days at 25 deg C
+
+
+
+~HELP_DITHIOCARBONATE
+
+  -C-S-C(=O)-S-C
+
+     Data for one dithiocarbonate indicates that hydrolysis rates increase
+     with increasing pH (5-9). This has also been observed with carbonates.
+
+     Experimental Half-Lives at 25 deg C (UDSA Pesticide Prop DB):
+        Chinomethionat (CAS 2439-01-2):
+              pH5 (7 days), pH7 (2 days), pH9 (2 hours)
+
+
+~HELP_DITHIOCARBAMATES
+
+  -S-C(=S)-N-
+
+    Data for a variety of dithiocarbamate pesticides (including metal salt
+    forms such as Maneb, Ziram and Metiram) suggest the following half-lives:
+
+           pH5    less than one day to several weeks
+           pH7    less than one day to several days
+           pH9    less than one day
+
+    See the on-line User Guide help file for experimental rate data.
+
+
+~HELP_CARBONYLUREA
+
+  -N-C(=O)-N-C(=O)
+
+    Data for carbonyl urea pesticides (such as Diflubenzuron, Flufenoxuron,
+    Lufenuron, Teflubenzuron and Triflumuron) indicate the following half-
+    lives (25 deg C):
+
+           pH5, pH7   30-500 days
+             pH9      1-70 days
+
+    See the on-line User Guide help file for experimental rate data.
+
+
+
+~~
