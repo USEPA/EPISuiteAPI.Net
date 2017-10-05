@@ -201,6 +201,7 @@ namespace EPISuiteAPI.Controllers
                     meltingPoint = chemical.melting_point.ToString();                
                 EPIReader epiReader = new EPIReader();
                 ChemicalProperties chemProps = epiReader.GetMeasuredProperties("epiwin1.exe", smiles, meltingPoint);
+                epiReader.Close();
                 return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
             }
             catch (Exception ex)

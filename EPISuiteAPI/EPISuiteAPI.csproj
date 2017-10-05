@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -224,6 +225,42 @@
     <Compile Include="Util\Globals.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\episuitefiles\Aerowin.exe" />
+    <Content Include="App_Data\episuitefiles\AOPWINNT.exe" />
+    <Content Include="App_Data\episuitefiles\BCFWINNT.exe" />
+    <Content Include="App_Data\episuitefiles\BioHCwin.exe" />
+    <Content Include="App_Data\episuitefiles\BIOWINNT.exe" />
+    <Content Include="App_Data\episuitefiles\cas_inp.txt" />
+    <Content Include="App_Data\episuitefiles\cas_res.txt" />
+    <Content Include="App_Data\episuitefiles\DERMALNT.exe" />
+    <Content Include="App_Data\episuitefiles\Ecowinnt.exe" />
+    <Content Include="App_Data\episuitefiles\epilinkCSharp.exe" />
+    <Content Include="App_Data\episuitefiles\EpiWeb1.exe" />
+    <Content Include="App_Data\episuitefiles\epiwin1.exe" />
+    <Content Include="App_Data\episuitefiles\EPIWINNT.exe" />
+    <Content Include="App_Data\episuitefiles\HENRYDLL.dll" />
+    <Content Include="App_Data\episuitefiles\HENRYNT.exe" />
+    <Content Include="App_Data\episuitefiles\HYDRONT.exe" />
+    <Content Include="App_Data\episuitefiles\KmModDLL.dll" />
+    <Content Include="App_Data\episuitefiles\KOAWIN.exe" />
+    <Content Include="App_Data\episuitefiles\KOWDLL.dll" />
+    <Content Include="App_Data\episuitefiles\kowwinnt.exe" />
+    <Content Include="App_Data\episuitefiles\LEVEL3NT.exe" />
+    <Content Include="App_Data\episuitefiles\leveliiisav.txt" />
+    <Content Include="App_Data\episuitefiles\MPBPNT.exe" />
+    <Content Include="App_Data\episuitefiles\none.jpg" />
+    <Content Include="App_Data\episuitefiles\PCKOCNT.exe" />
+    <Content Include="App_Data\episuitefiles\physprops.txt" />
+    <Content Include="App_Data\episuitefiles\SMICONV.DLL" />
+    <Content Include="App_Data\episuitefiles\SRCLOGO.BMP" />
+    <Content Include="App_Data\episuitefiles\stlpmt45.dll" />
+    <Content Include="App_Data\episuitefiles\STPWIN32.exe" />
+    <Content Include="App_Data\episuitefiles\TwoDEdit.dll" />
+    <Content Include="App_Data\episuitefiles\WATERNT.exe" />
+    <Content Include="App_Data\episuitefiles\WCT32D.DLL" />
+    <Content Include="App_Data\episuitefiles\WSKOWDLL.dll" />
+    <Content Include="App_Data\episuitefiles\WSKOWNT.exe" />
+    <Content Include="App_Data\episuitefiles\WVOLNT.exe" />
     <Content Include="App_Data\epi_inp_template.txt" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\bootstrap.css" />
@@ -253,6 +290,35 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
+    <Content Include="App_Data\episuitefiles\AOPEXP.DB" />
+    <Content Include="App_Data\episuitefiles\AOPEXP.IDX" />
+    <Content Include="App_Data\episuitefiles\CBT.LIB" />
+    <Content Include="App_Data\episuitefiles\dbrtl60.bpl" />
+    <Content Include="App_Data\episuitefiles\EPI_PHYS.DB" />
+    <Content Include="App_Data\episuitefiles\EPI_PHYS.IDX" />
+    <Content Include="App_Data\episuitefiles\EXPBCFKM.DB" />
+    <Content Include="App_Data\episuitefiles\EXPBCFKM.IDX" />
+    <Content Include="App_Data\episuitefiles\EXPHEN.DB" />
+    <Content Include="App_Data\episuitefiles\EXPHEN.IDX" />
+    <Content Include="App_Data\episuitefiles\EXPKOC.DB" />
+    <Content Include="App_Data\episuitefiles\EXPKOC.IDX" />
+    <Content Include="App_Data\episuitefiles\EXPKOW.DB" />
+    <Content Include="App_Data\episuitefiles\EXPKOW.IDX" />
+    <Content Include="App_Data\episuitefiles\EXPWSOL.DB" />
+    <Content Include="App_Data\episuitefiles\EXPWSOL.IDX" />
+    <Content Include="App_Data\episuitefiles\EXP_KOA.DB" />
+    <Content Include="App_Data\episuitefiles\EXP_KOA.IDX" />
+    <Content Include="App_Data\episuitefiles\EXP_MBVP.DB" />
+    <Content Include="App_Data\episuitefiles\EXP_MBVP.IDX" />
+    <Content Include="App_Data\episuitefiles\Hydro01.fil" />
+    <Content Include="App_Data\episuitefiles\ISAM.LIB" />
+    <Content Include="App_Data\episuitefiles\MWCT32D.LIB" />
+    <Content Include="App_Data\episuitefiles\NAMESEPI.DB" />
+    <Content Include="App_Data\episuitefiles\NAMESEPI.IDX" />
+    <Content Include="App_Data\episuitefiles\SMICONV.LIB" />
+    <Content Include="App_Data\episuitefiles\SMILECAS.DB" />
+    <Content Include="App_Data\episuitefiles\SMILECAS.IDX" />
+    <Content Include="App_Data\episuitefiles\SMILES.INP" />
     <None Include="Properties\PublishProfiles\episuite_api.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
