@@ -7,6 +7,8 @@ namespace EPISuiteAPI.Models
 {
     public class Chemical
     {
-        public string structure {get; set;}
+        public string structure { get; set; }
+        public double? melting_point { get; set; }
     }
+        
 }

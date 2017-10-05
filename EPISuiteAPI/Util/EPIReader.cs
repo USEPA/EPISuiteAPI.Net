@@ -12,11 +12,16 @@ namespace EPISuiteAPI.Util
 {
     public class EPIReader
     {
+        string _epiInstallFolder = @"C:\EPISUITE41";
+        string _epiWinExe = "epiwin1.exe";
+        string _epiInput = "epi_inp.txt";
 
-        private string _tempFolder { get; set;}
+        string _tempFolder { get; set;}
+
         public EPIReader()
         {
             _tempFolder = CreateTempFolder();
+            CopyEPISuiteFiles();
         }
 
         public void Close()
@@ -48,19 +53,20 @@ namespace EPISuiteAPI.Util
             chemProps = ReadSummaryFile();
             //if (chemProps == null)
             //{
-                double mp = 0;
-                double lKow = 0;
-                if (chemProps.properties.Keys.Contains(Globals.MELTING_POINT))
-                {
-                    mp = chemProps.properties[Globals.MELTING_POINT].propertyvalue;
-                }
-                if (chemProps.properties.Keys.Contains(Globals.LOG_KOW))
-                {
-                    lKow = chemProps.properties[Globals.LOG_KOW].propertyvalue;
-                }
-                epiInputFile = WriteEpiInput(smiles, mp.ToString(), lKow.ToString());
-                RunEPIWinExecutable(modelExe, smiles, epiInputFile);
-                chemProps = ReadSummaryFile();
+            //double mp = 0;
+            string mp = "0";
+            string lKow = "0";
+            if (chemProps.properties.Keys.Contains(Globals.MELTING_POINT))
+            {
+                mp = chemProps.properties[Globals.MELTING_POINT].propertyvalue;
+            }
+            if (chemProps.properties.Keys.Contains(Globals.LOG_KOW))
+            {
+                lKow = chemProps.properties[Globals.LOG_KOW].propertyvalue;
+            }
+            epiInputFile = WriteEpiInput(smiles, mp.ToString(), lKow.ToString());
+            RunEPIWinExecutable(modelExe, smiles, epiInputFile);
+            chemProps = ReadSummaryFile();
             //}
 
             return chemProps;
@@ -71,7 +77,8 @@ namespace EPISuiteAPI.Util
         {
             ChemicalProperties chemProps = new ChemicalProperties();
 
-            string summary = ReadFile(Path.Combine(Globals.EPI_SUITE_PATH, "summary"));
+            //string summary = ReadFile(Path.Combine(Globals.EPI_SUITE_PATH, "summary"));
+            string summary = ReadFile(Path.Combine(_tempFolder, "summary"));
             if (string.IsNullOrWhiteSpace(summary))
                 return null;
 
@@ -179,7 +186,8 @@ namespace EPISuiteAPI.Util
                 string[] tokens2 = tokens[1].Trim().Split(" ".ToCharArray());
                 chemProp = new ChemicalProperty();
                 chemProp.propertyname = propName;
-                chemProp.propertyvalue = Convert.ToDouble(tokens2[0].Trim());                
+                //chemProp.propertyvalue = Convert.ToDouble(tokens2[0].Trim());                
+                chemProp.propertyvalue = tokens2[0].Trim();
             }
 
             return chemProp;
@@ -215,7 +223,8 @@ namespace EPISuiteAPI.Util
             fileContents = fileContents.Replace("(smiles)", smiles);
             fileContents = fileContents.Replace("(melting_point)", meltingPoint);
             fileContents = fileContents.Replace("(log_kow)", logKow);
-            string epiInputFile = Path.Combine(Globals.EPI_SUITE_PATH, "epi_inp.txt");
+            //string epiInputFile = Path.Combine(Globals.EPI_SUITE_PATH, "epi_inp.txt");
+            string epiInputFile = Path.Combine(_tempFolder, "epi_inp.txt");
             WriteFile(epiInputFile, fileContents);
 
             return epiInputFile;
@@ -253,13 +262,14 @@ namespace EPISuiteAPI.Util
 
                 ChemicalProperty chemProp = null;
                 double val;
-                if (double.TryParse(sval, out val))
-                {
+                //if (double.TryParse(sval, out val))
+                //{
                     chemProp = new ChemicalProperty();
-                    chemProp.propertyvalue = val;
+                    //chemProp.propertyvalue = val;
+                    chemProp.propertyvalue = sval;
                     chemProp.propertyname = property;
                     chemProp.structure = smiles;
-                }
+                //}
 
                 return chemProp;
             }
@@ -277,7 +287,8 @@ namespace EPISuiteAPI.Util
         public void RunExecutable(string modelExe, string smiles)
         {
             string xsmilesFile = WriteXsmile(smiles);
-            string command = Path.Combine(Globals.EPI_SUITE_PATH, modelExe);
+            //string command = Path.Combine(Globals.EPI_SUITE_PATH, modelExe);
+            string command = Path.Combine(_tempFolder, modelExe);
             string args = "episrc " + xsmilesFile;
 
             ProcessStartInfo psi = CreateProcessStartInfo(command, args);
@@ -290,11 +301,13 @@ namespace EPISuiteAPI.Util
         public void RunEPIWinExecutable(string modelExe, string smiles, string inputFile)
         {
             //string epiInpFile = WriteEpiInput(smiles, meltingPoint, logKow);
-            string command = Path.Combine(Globals.EPI_SUITE_PATH, modelExe);
+            //string command = Path.Combine(Globals.EPI_SUITE_PATH, modelExe);
+            string command = Path.Combine(_tempFolder, modelExe);
             string args = inputFile;
 
             ProcessStartInfo psi = CreateProcessStartInfo(command, args);
-            psi.WorkingDirectory = Globals.EPI_SUITE_PATH;
+            psi.WorkingDirectory = _tempFolder;
+            //psi.WorkingDirectory = Globals.EPI_SUITE_PATH;
             int exitCode = RunProcess(psi);
             if (exitCode != 0)
                 throw new Exception(string.Format("Error executing {0} with argument {1} .", modelExe, smiles));
@@ -347,14 +360,16 @@ namespace EPISuiteAPI.Util
                 ChemicalProperty chemProp = null;
                 if (dctPropVals.ContainsKey(property))
                 {
-                    double val;
-                    if (double.TryParse(dctPropVals[property], out val))
-                    {
-                        chemProp = new ChemicalProperty();
-                        chemProp.propertyvalue = val;
-                        chemProp.propertyname = property;
-                        chemProp.structure = smiles;
-                    }
+                    //double val;
+                    string sval = dctPropVals[property];
+                    //if (double.TryParse(dctPropVals[property], out val))
+                    //{
+                    chemProp = new ChemicalProperty();
+                    //chemProp.propertyvalue = val;
+                    chemProp.propertyvalue = sval;
+                    chemProp.propertyname = property;
+                    chemProp.structure = smiles;
+                    //}
                 }
 
                 return chemProp;
@@ -396,7 +411,28 @@ namespace EPISuiteAPI.Util
             return randomFolder;
         }
 
-        public void DeleteFolder(string folder)
+        public void CopyEPISuiteFiles()
+        {
+            string epi_suite_files = System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data/episuitefiles");
+            //string epi_suite_files = Path.Combine(serverPath, "epi_inp_template.txt");
+
+            if (Directory.Exists(epi_suite_files))
+            {
+                string[] files = Directory.GetFiles(epi_suite_files);
+
+                // Copy the files and overwrite destination files if they already exist.
+                foreach (string file in files)
+                {
+                    // Use static Path methods to extract only the file name from the path.
+                    string src = Path.Combine(epi_suite_files, file);
+                    string dest = Path.Combine(_tempFolder, Path.GetFileName(file));
+                    System.IO.File.Copy(src, dest, true);
+                }
+            }
+        }
+
+
+public void DeleteFolder(string folder)
         {
             if (Directory.Exists(folder))
                 Directory.Delete(folder, true);

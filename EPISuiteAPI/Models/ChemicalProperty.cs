@@ -9,7 +9,8 @@ namespace EPISuiteAPI.Models
     {
         public string structure { get; set; }
         public string propertyname { get; set; }
-        public double propertyvalue { get; set; }
+        //public double propertyvalue { get; set; }
+        public string propertyvalue { get; set; }
     }
 
     public class ChemicalProperties
