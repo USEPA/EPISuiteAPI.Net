@@ -1,0 +1,15 @@
+Experimental Data from PhysProp Database:
+  CAS Number:  003811-49-2
+  Chem Name :  SALITHION
+  MP (deg C):  --- 
+  BP (deg C):  --- 
+  Log Kow   :  2.67
+    Kow ref :  HANSCH,C ET AL. (1995)
+  Water Sol :  58 mg/L
+    WS temp :  30 deg C
+    WS ref  :  YALKOWSKY,SH & DANNENFELSER,RM (1992)
+  Vapor Pr  :  --- 
+  Henry LC  :  --- 
+  pKa       :  --- 
+  OH Rate   :  --- 
+ 
