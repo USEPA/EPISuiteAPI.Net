@@ -181,7 +181,8 @@ namespace EPISuiteAPI.Util
             if (idx > 0)
             {
                 idxNewLine = summary.IndexOf(Environment.NewLine, idx);
-                string line = summary.Substring(idx, (idxNewLine - idx) - 1);
+                //string line = summary.Substring(idx, (idxNewLine - idx) - 1);
+                string line = summary.Substring(idx, (idxNewLine - idx));
                 string[] tokens = line.Split(delimeter.ToCharArray());
                 string[] tokens2 = tokens[1].Trim().Split(" ".ToCharArray());
                 chemProp = new ChemicalProperty();
