@@ -30,9 +30,13 @@ namespace EPISuiteAPI.Util
                 Directory.Delete(_tempFolder, true);
         }
 
-        public ChemicalProperty GetEstimatedProperty(string modelExe, string property, string smiles)
+        public ChemicalProperty GetEstimatedProperty(string modelExe, string property, string smiles, double? melting_point = null)
         {
             //string tempFolder = CreateTempFolder();
+            if (melting_point != null)
+            {
+                WriteVPBPMPFile(melting_point.ToString());
+            }
             RunExecutable(modelExe, smiles);
             ChemicalProperty chemProp = null;
             if (string.Compare(modelExe, "henrynt.exe", true) != 0)
@@ -202,6 +206,20 @@ namespace EPISuiteAPI.Util
             WriteFile(xsmiles, fileContents);
 
             return xsmiles;
+        }
+
+        /// <summary>
+        /// THis is the text file that contains a melting point value
+        /// First line is  -999.00
+        /// Second line is melting point
+        /// </summary>
+        /// <returns></returns>
+        private string WriteVPBPMPFile(string melting_point)
+        {
+            string vpbpmp = Path.Combine(_tempFolder, Globals.VPBPMP);
+            string fileContents = "-999.00" + Environment.NewLine + melting_point;
+            WriteFile(vpbpmp, fileContents);
+            return vpbpmp;
         }
 
         /// <summary>

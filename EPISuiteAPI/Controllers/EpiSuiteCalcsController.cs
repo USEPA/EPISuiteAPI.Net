@@ -74,7 +74,7 @@ namespace EPISuiteAPI.Controllers
             try
             {
                 EPIReader epiReader = new EPIReader();
-                ChemicalProperty chemProp = epiReader.GetEstimatedProperty("wskownt.exe", "Water Sol (mg/L)(estimated)", chemical.structure);
+                ChemicalProperty chemProp = epiReader.GetEstimatedProperty("wskownt.exe", "Water Sol (mg/L)(estimated)", chemical.structure, chemical.melting_point);
                 epiReader.Close();
                 return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProp);
             }

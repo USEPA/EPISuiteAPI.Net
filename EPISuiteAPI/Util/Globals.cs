@@ -11,6 +11,7 @@ namespace EPISuiteAPI.Util
         public const string XSMILES = @"xsmiles";
         public const string SUMBRIEF = @"sumbrief.epi";
         public const string HENRYVAL = @"henryval";
+        public const string VPBPMP = @"vpbpmp";
 
         public const string MP_BP_EXE           = "mpbpnt.exe";
         public const string BP_EST              = "Boiling Pt (deg C)(estimated)";
