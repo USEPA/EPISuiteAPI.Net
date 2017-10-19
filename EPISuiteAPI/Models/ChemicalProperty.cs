@@ -13,6 +13,15 @@ namespace EPISuiteAPI.Models
         public string calc { get; set; }
         public string method { get; set; }
         public string data { get; set; }
+
+        public ChemicalProperty()
+        {
+            chemical = null;
+            prop = null;
+            calc = null;
+            method = null;
+            data = null;
+        }
     }
 
     public class ChemicalProperties

@@ -22,7 +22,10 @@ namespace EPISuiteAPI.Controllers
                 EPIReader epiReader = new EPIReader();
                 ChemicalProperty chemProp = epiReader.GetEstimatedProperty("mpbpnt.exe", "Boiling Pt (deg C)(estimated)", chemical.structure);
                 epiReader.Close();
-                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProp);
+                ChemicalProperties chemProps = new ChemicalProperties();
+                chemProp.prop = Globals.BOILING_POINT;
+                chemProps.data.Add(chemProp);                
+                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
             }
             catch (Exception ex)
             {
@@ -40,7 +43,12 @@ namespace EPISuiteAPI.Controllers
                 EPIReader epiReader = new EPIReader();
                 ChemicalProperty chemProp = epiReader.GetEstimatedProperty("mpbpnt.exe", "Melting Pt (deg C)(estimated)", chemical.structure);
                 epiReader.Close();
-                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProp);
+
+                ChemicalProperties chemProps = new ChemicalProperties();
+                chemProp.prop = Globals.MELTING_POINT;
+                chemProps.data.Add(chemProp);
+                
+                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
             }
             catch (Exception ex)
             {
@@ -58,7 +66,12 @@ namespace EPISuiteAPI.Controllers
                 EPIReader epiReader = new EPIReader();
                 ChemicalProperty chemProp = epiReader.GetEstimatedProperty("mpbpnt.exe", "Vapor Press (mm Hg)(estimated)", chemical.structure);
                 epiReader.Close();
-                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProp);
+
+                ChemicalProperties chemProps = new ChemicalProperties();
+                chemProp.prop = Globals.VAPOR_PRESSURE;
+                chemProps.data.Add(chemProp);
+                
+                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
             }
             catch (Exception ex)
             {
@@ -73,16 +86,23 @@ namespace EPISuiteAPI.Controllers
         {
             try
             {
+                ChemicalProperties chemProps = new ChemicalProperties();
                 EPIReader epiReader = new EPIReader();
                 ChemicalProperty chemProp = epiReader.GetEstimatedProperty("wskownt.exe", "Water Sol (mg/L)(estimated)", chemical.structure, chemical.melting_point);
-                epiReader.Close();
+                //epiReader.Close();
+                chemProp.prop = Globals.WATER_SOLUBILITY;
+                chemProp.method = "wskownt";
+                chemProps.data.Add(chemProp);
 
-                epiReader = new EPIReader();
+                //epiReader = new EPIReader();
                 ChemicalProperty chemProp2 = epiReader.GetEstimatedProperty("waternt.exe", "WSol (mg/L frag est)", chemical.structure, chemical.melting_point);
+                chemProp2.prop = Globals.WATER_SOLUBILITY;
+                chemProp2.method = "waternt";
+                chemProps.data.Add(chemProp2);
                 epiReader.Close();
 
 
-                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProp);
+                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
             }
             catch (Exception ex)
             {
@@ -100,8 +120,11 @@ namespace EPISuiteAPI.Controllers
                 EPIReader epiReader = new EPIReader();
                 ChemicalProperty chemProp = epiReader.GetEstimatedProperty("henrynt.exe", "Henry's Law Constant (atm-m3/mol)", chemical.structure);
                 epiReader.Close();
-                string tmp = Newtonsoft.Json.JsonConvert.SerializeObject(chemProp);
-                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProp);
+                ChemicalProperties chemProps = new ChemicalProperties();
+                chemProp.prop = Globals.HENRY_LAW;
+                chemProps.data.Add(chemProp);
+                //string tmp = Newtonsoft.Json.JsonConvert.SerializeObject(chemProp);
+                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
             }
             catch (Exception ex)
             {
@@ -119,7 +142,10 @@ namespace EPISuiteAPI.Controllers
                 EPIReader epiReader = new EPIReader();
                 ChemicalProperty chemProp = epiReader.GetEstimatedProperty("kowwinnt.exe", "Log Kow (estimate)", chemical.structure);
                 epiReader.Close();
-                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProp);
+                ChemicalProperties chemProps = new ChemicalProperties();
+                chemProp.prop = Globals.LOG_KOW;
+                chemProps.data.Add(chemProp);
+                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
             }
             catch (Exception ex)
             {
@@ -137,7 +163,10 @@ namespace EPISuiteAPI.Controllers
                 EPIReader epiReader = new EPIReader();
                 ChemicalProperty chemProp = epiReader.GetEstimatedProperty("pckocnt.exe", "Soil Adsorption Coef (Koc)", chemical.structure);
                 epiReader.Close();
-                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProp);
+                ChemicalProperties chemProps = new ChemicalProperties();
+                chemProp.prop = Globals.LOG_KOC;
+                chemProps.data.Add(chemProp);
+                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
             }
             catch (Exception ex)
             {
