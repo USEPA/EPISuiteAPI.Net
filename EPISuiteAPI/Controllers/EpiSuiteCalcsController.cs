@@ -76,6 +76,12 @@ namespace EPISuiteAPI.Controllers
                 EPIReader epiReader = new EPIReader();
                 ChemicalProperty chemProp = epiReader.GetEstimatedProperty("wskownt.exe", "Water Sol (mg/L)(estimated)", chemical.structure, chemical.melting_point);
                 epiReader.Close();
+
+                epiReader = new EPIReader();
+                ChemicalProperty chemProp2 = epiReader.GetEstimatedProperty("waternt.exe", "WSol (mg/L frag est)", chemical.structure, chemical.melting_point);
+                epiReader.Close();
+
+
                 return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProp);
             }
             catch (Exception ex)
@@ -151,29 +157,36 @@ namespace EPISuiteAPI.Controllers
                                
                 epiReader.RunExecutable("mpbpnt.exe",smiles);
                 ChemicalProperty chemProp = epiReader.ReadSumbrief("Boiling Pt (deg C)(estimated)", smiles);
-                chemProps.properties.Add(Globals.BOILING_POINT, chemProp);
+                chemProp.prop = Globals.BOILING_POINT;
+                chemProps.data.Add(chemProp);
 
                 ChemicalProperty chemProp2 = epiReader.ReadSumbrief("Melting Pt (deg C)(estimated)", smiles);
-                chemProps.properties.Add(Globals.MELTING_POINT, chemProp2);
+                chemProp2.prop = Globals.MELTING_POINT;
+                chemProps.data.Add(chemProp2);
 
                 ChemicalProperty chemProp3 = epiReader.ReadSumbrief("Vapor Press (mm Hg)(estimated)", smiles);
-                chemProps.properties.Add(Globals.VAPOR_PRESSURE, chemProp3);
+                chemProp3.prop = Globals.VAPOR_PRESSURE;
+                chemProps.data.Add(chemProp3);
 
                 epiReader.RunExecutable("wskownt.exe", smiles);
                 ChemicalProperty chemProp4 = epiReader.ReadSumbrief("Water Sol (mg/L)(estimated)", smiles);
-                chemProps.properties.Add(Globals.WATER_SOLUBILITY, chemProp4);
+                chemProp4.prop = Globals.WATER_SOLUBILITY;
+                chemProps.data.Add(chemProp4);
 
                 epiReader.RunExecutable("henrynt.exe", smiles);
                 ChemicalProperty chemProp5 = epiReader.ReadHenryVal("Henry's Law Constant (atm-m3/mol)", smiles);
-                chemProps.properties.Add(Globals.HENRY_LAW, chemProp5);
+                chemProp5.prop = Globals.HENRY_LAW;
+                chemProps.data.Add(chemProp5);
 
                 epiReader.RunExecutable("kowwinnt.exe", smiles);
                 ChemicalProperty chemProp6 = epiReader.ReadSumbrief("Log Kow (estimate)", smiles);
-                chemProps.properties.Add(Globals.LOG_KOW, chemProp6);
+                chemProp6.prop = Globals.LOG_KOW;
+                chemProps.data.Add(chemProp6);
 
                 epiReader.RunExecutable("pckocnt.exe", smiles);
                 ChemicalProperty chemProp7 = epiReader.ReadSumbrief("Soil Adsorption Coef (Koc)", smiles);
-                chemProps.properties.Add(Globals.LOG_KOC, chemProp7);
+                chemProp7.prop = Globals.LOG_KOC;
+                chemProps.data.Add(chemProp7);
 
                 epiReader.Close();
 

@@ -60,13 +60,17 @@ namespace EPISuiteAPI.Util
             //double mp = 0;
             string mp = "0";
             string lKow = "0";
-            if (chemProps.properties.Keys.Contains(Globals.MELTING_POINT))
+            ChemicalProperty cp = chemProps.data.Find(i => i.prop == Globals.MELTING_POINT);
+            if (cp != null)
             {
-                mp = chemProps.properties[Globals.MELTING_POINT].propertyvalue;
+                mp = cp.data;
             }
-            if (chemProps.properties.Keys.Contains(Globals.LOG_KOW))
+
+            cp = null;
+            cp = chemProps.data.Find(i => i.prop == Globals.LOG_KOW);
+            if (cp != null)
             {
-                lKow = chemProps.properties[Globals.LOG_KOW].propertyvalue;
+                lKow = cp.data;
             }
             epiInputFile = WriteEpiInput(smiles, mp.ToString(), lKow.ToString());
             RunEPIWinExecutable(modelExe, smiles, epiInputFile);
@@ -101,7 +105,8 @@ namespace EPISuiteAPI.Util
             {
                 bLogKow = true;
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logKowSearchText, Globals.LOG_KOW, "=");
-                chemProps.properties.Add(Globals.LOG_KOW, chemProp);
+                chemProp.prop = Globals.LOG_KOW;
+                chemProps.data.Add(chemProp);
             }
             //End code log kow
 
@@ -116,7 +121,8 @@ namespace EPISuiteAPI.Util
             {
                 bMP = true;
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, MPSearchTest, Globals.MELTING_POINT, ":");
-                chemProps.properties.Add(Globals.MELTING_POINT, chemProp);                
+                chemProp.prop = Globals.MELTING_POINT;
+                chemProps.data.Add(chemProp);                
             }
             //End code for melting point
 
@@ -128,7 +134,8 @@ namespace EPISuiteAPI.Util
             if (idx > 0)
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, VPSearchText, Globals.VAPOR_PRESSURE, ":");
-                chemProps.properties.Add(Globals.VAPOR_PRESSURE, chemProp);
+                chemProp.prop = Globals.VAPOR_PRESSURE;
+                chemProps.data.Add(chemProp);
             }
 
 
@@ -138,7 +145,8 @@ namespace EPISuiteAPI.Util
             if (idx > 0)
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, BPSearchText, Globals.BOILING_POINT, ":");
-                chemProps.properties.Add(Globals.BOILING_POINT, chemProp);
+                chemProp.prop = Globals.BOILING_POINT;
+                chemProps.data.Add(chemProp);
             }
 
 
@@ -149,7 +157,8 @@ namespace EPISuiteAPI.Util
             if (idx > 0)
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, WSSearchText, Globals.WATER_SOLUBILITY, "=");
-                chemProps.properties.Add(Globals.WATER_SOLUBILITY, chemProp);
+                chemProp.prop = Globals.WATER_SOLUBILITY;
+                chemProps.data.Add(chemProp);
             }
 
             //Code for henrys law constant
@@ -159,7 +168,8 @@ namespace EPISuiteAPI.Util
             if (idx > 0)
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, henrysLawSearchText, Globals.HENRY_LAW, ":");
-                chemProps.properties.Add(Globals.HENRY_LAW, chemProp);
+                chemProp.prop = Globals.HENRY_LAW;
+                chemProps.data.Add(chemProp);
             }
 
 
@@ -170,7 +180,8 @@ namespace EPISuiteAPI.Util
             if (idx > 0)
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logKocSearchText, Globals.LOG_KOC, ":");
-                chemProps.properties.Add(Globals.LOG_KOC,chemProp);
+                chemProp.prop = Globals.LOG_KOC;
+                chemProps.data.Add(chemProp);
             }
 
             return chemProps;
@@ -190,9 +201,9 @@ namespace EPISuiteAPI.Util
                 string[] tokens = line.Split(delimeter.ToCharArray());
                 string[] tokens2 = tokens[1].Trim().Split(" ".ToCharArray());
                 chemProp = new ChemicalProperty();
-                chemProp.propertyname = propName;
+                chemProp.prop = propName;
                 //chemProp.propertyvalue = Convert.ToDouble(tokens2[0].Trim());                
-                chemProp.propertyvalue = tokens2[0].Trim();
+                chemProp.data = tokens2[0].Trim();
             }
 
             return chemProp;
@@ -241,8 +252,7 @@ namespace EPISuiteAPI.Util
 
             fileContents = fileContents.Replace("(smiles)", smiles);
             fileContents = fileContents.Replace("(melting_point)", meltingPoint);
-            fileContents = fileContents.Replace("(log_kow)", logKow);
-            //string epiInputFile = Path.Combine(Globals.EPI_SUITE_PATH, "epi_inp.txt");
+            fileContents = fileContents.Replace("(log_kow)", logKow);            
             string epiInputFile = Path.Combine(_tempFolder, "epi_inp.txt");
             WriteFile(epiInputFile, fileContents);
 
@@ -285,9 +295,9 @@ namespace EPISuiteAPI.Util
                 //{
                     chemProp = new ChemicalProperty();
                     //chemProp.propertyvalue = val;
-                    chemProp.propertyvalue = sval;
-                    chemProp.propertyname = property;
-                    chemProp.structure = smiles;
+                    chemProp.data = sval;
+                    chemProp.prop = property;
+                    chemProp.chemical = smiles;
                 //}
 
                 return chemProp;
@@ -385,9 +395,9 @@ namespace EPISuiteAPI.Util
                     //{
                     chemProp = new ChemicalProperty();
                     //chemProp.propertyvalue = val;
-                    chemProp.propertyvalue = sval;
-                    chemProp.propertyname = property;
-                    chemProp.structure = smiles;
+                    chemProp.data = sval;
+                    chemProp.prop = property;
+                    chemProp.chemical = smiles;
                     //}
                 }
 
