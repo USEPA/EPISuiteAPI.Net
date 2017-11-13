@@ -16,9 +16,9 @@ namespace EPISuiteAPI.Models
 
         public ChemicalProperty()
         {
-            chemical = "epi";
+            chemical = null;
             prop = null;
-            calc = null;
+            calc = "epi";
             method = null;
             data = null;
         }
