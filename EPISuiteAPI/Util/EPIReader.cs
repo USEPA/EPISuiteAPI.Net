@@ -238,6 +238,7 @@ namespace EPISuiteAPI.Util
                 bLogKow = true;
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logKowSearchText, Globals.LOG_KOW, "=");
                 chemProp.prop = Globals.LOG_KOW;
+                chemProp.method = "measured";
                 chemProps.data.Add(chemProp);
             }
             //End code log kow
@@ -254,6 +255,7 @@ namespace EPISuiteAPI.Util
                 bMP = true;
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, MPSearchTest, Globals.MELTING_POINT, ":");
                 chemProp.prop = Globals.MELTING_POINT;
+                chemProp.method = "measured";
                 chemProps.data.Add(chemProp);                
             }
             //End code for melting point
@@ -267,6 +269,7 @@ namespace EPISuiteAPI.Util
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, VPSearchText, Globals.VAPOR_PRESSURE, ":");
                 chemProp.prop = Globals.VAPOR_PRESSURE;
+                chemProp.method = "measured";
                 chemProps.data.Add(chemProp);
             }
 
@@ -278,6 +281,7 @@ namespace EPISuiteAPI.Util
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, BPSearchText, Globals.BOILING_POINT, ":");
                 chemProp.prop = Globals.BOILING_POINT;
+                chemProp.method = "measured";
                 chemProps.data.Add(chemProp);
             }
 
@@ -290,6 +294,7 @@ namespace EPISuiteAPI.Util
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, WSSearchText, Globals.WATER_SOLUBILITY, "=");
                 chemProp.prop = Globals.WATER_SOLUBILITY;
+                chemProp.method = "measured";
                 chemProps.data.Add(chemProp);
             }
 
@@ -301,6 +306,7 @@ namespace EPISuiteAPI.Util
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, henrysLawSearchText, Globals.HENRY_LAW, ":");
                 chemProp.prop = Globals.HENRY_LAW;
+                chemProp.method = "measured";
                 chemProps.data.Add(chemProp);
             }
 
@@ -313,6 +319,7 @@ namespace EPISuiteAPI.Util
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logKocSearchText, Globals.LOG_KOC, ":");
                 chemProp.prop = Globals.LOG_KOC;
+                chemProp.method = "measured";
                 chemProps.data.Add(chemProp);
             }
 

@@ -21,6 +21,7 @@ namespace EPISuiteAPI.Models
             calc = "epi";
             method = null;
             data = null;
+
         }
     }
 
