@@ -39,7 +39,8 @@ namespace EPISuiteAPI.Util
         public const string HENRY_LAW           = "henrys_law_constant";
         public const string LOG_KOW             = "log_kow";
         public const string LOG_KOC             = "log_koc";
-
+        public const string LOG_BCF             = "log_bcf";        
+        public const string LOG_BAF             = "log_baf";
 
     }
 }
