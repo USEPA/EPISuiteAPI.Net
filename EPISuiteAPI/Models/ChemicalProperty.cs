@@ -18,9 +18,10 @@ namespace EPISuiteAPI.Models
         {
             chemical = null;
             prop = null;
-            calc = null;
+            calc = "epi";
             method = null;
             data = null;
+
         }
     }
 

@@ -12,9 +12,9 @@ namespace EPISuiteAPI.Util
 {
     public class EPIReader
     {
-        string _epiInstallFolder = @"C:\EPISUITE41";
-        string _epiWinExe = "epiwin1.exe";
-        string _epiInput = "epi_inp.txt";
+        //string _epiInstallFolder = @"C:\EPISUITE41";
+        //string _epiWinExe = "epiwin1.exe";
+        //string _epiInput = "epi_inp.txt";
 
         string _tempFolder { get; set;}
 
@@ -48,40 +48,52 @@ namespace EPISuiteAPI.Util
 
         }
 
-
-        public ChemicalProperties GetMeasuredProperties(string modelExe, string smiles, string meltingPoint = "(null)", string logKow = "(null)")
+        public ChemicalProperties GetEstimatedProperties(string modelExe, string smiles, string meltingPoint = "(null)", string logKow = "(null)")
         {
             string epiInputFile = WriteEpiInput(smiles, meltingPoint, logKow);
             RunEPIWinExecutable(modelExe, smiles, epiInputFile);
             ChemicalProperties chemProps = null;
-            chemProps = ReadSummaryFile();
-            //if (chemProps == null)
-            //{
-            //double mp = 0;
-            string mp = "0";
-            string lKow = "0";
-            ChemicalProperty cp = chemProps.data.Find(i => i.prop == Globals.MELTING_POINT);
-            if (cp != null)
-            {
-                mp = cp.data;
-            }
+            chemProps = ReadSummaryFileForEstimatedValues();
 
-            cp = null;
-            cp = chemProps.data.Find(i => i.prop == Globals.LOG_KOW);
-            if (cp != null)
-            {
-                lKow = cp.data;
-            }
-            epiInputFile = WriteEpiInput(smiles, mp.ToString(), lKow.ToString());
+            return chemProps;
+        }
+
+            public ChemicalProperties GetMeasuredProperties(string modelExe, string smiles, string meltingPoint = "(null)", string logKow = "(null)")
+        {
+            string epiInputFile = WriteEpiInput(smiles, meltingPoint, logKow);
             RunEPIWinExecutable(modelExe, smiles, epiInputFile);
-            chemProps = ReadSummaryFile();
-            //}
+            ChemicalProperties chemProps = null;
+            chemProps = ReadSummaryFileForMeasuredValues();
 
             return chemProps;
 
+            //if (chemProps == null)
+            //{
+            //double mp = 0;
+            //string mp = "0";
+            //string lKow = "0";
+            //ChemicalProperty cp = chemProps.data.Find(i => i.prop == Globals.MELTING_POINT);
+            //if (cp != null)
+            //{
+            //    mp = cp.data;
+            //}
+
+            //cp = null;
+            //cp = chemProps.data.Find(i => i.prop == Globals.LOG_KOW);
+            //if (cp != null)
+            //{
+            //    lKow = cp.data;
+            //}
+            //epiInputFile = WriteEpiInput(smiles, mp.ToString(), lKow.ToString());
+            //RunEPIWinExecutable(modelExe, smiles, epiInputFile);
+            //chemProps = ReadSummaryFile();
+            ////}
+
+            //return chemProps;
+
         }
 
-        private ChemicalProperties ReadSummaryFile()
+        private ChemicalProperties ReadSummaryFileForEstimatedValues()
         {
             ChemicalProperties chemProps = new ChemicalProperties();
 
@@ -91,21 +103,181 @@ namespace EPISuiteAPI.Util
                 return null;
 
             int idx = 0;
-            bool bLogKow = false;
-            bool bMP = false;
+            //bool bLogKow = false;
+            //bool bMP = false;
+
+
+            //Code for log kow
+            //Parsing line like this:     Log Kow (KOWWIN v1.68 estimate) = 4.40
+            string logKowSearchText = "Log Kow (KOWWIN v1.68 estimate) =";
+            idx = summary.IndexOf(logKowSearchText);
+            //if (idx < 0)
+                //bLogKow = false;
+            //else
+            if (idx >= 0)
+            {
+                //bLogKow = true;
+                ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logKowSearchText, Globals.LOG_KOW, "=");
+                chemProp.prop = Globals.LOG_KOW;
+                chemProps.data.Add(chemProp);
+            }
+            //End code log kow
+
+
+            //Code for melting point
+            //Parsing line like this:     Melting Pt (deg C):  53.61
+            string MPSearchTest = "Melting Pt (deg C):";
+            idx = summary.IndexOf(MPSearchTest);
+            //if (idx < 0)
+                //bMP = false;
+            //else
+            if (idx >= 0)
+            {
+                //bMP = true;
+                ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, MPSearchTest, Globals.MELTING_POINT, ":");
+                chemProp.prop = Globals.MELTING_POINT;
+                chemProps.data.Add(chemProp);
+            }
+            //End code for melting point
+
+
+            //Code for vapor pressure
+            //Parsing line like this:     VP(mm Hg,25 deg C):  0.00443
+            string VPSearchText = "VP(mm Hg,25 deg C):";
+            idx = summary.IndexOf(VPSearchText);
+            if (idx > 0)
+            {
+                ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, VPSearchText, Globals.VAPOR_PRESSURE, ":");
+                chemProp.prop = Globals.VAPOR_PRESSURE;
+                chemProps.data.Add(chemProp);
+            }
+
+
+            ////Code for boiling point
+            //Parsing line like this:  Boiling Pt (deg C):  297.60
+            string BPSearchText = "Boiling Pt (deg C):";
+            idx = summary.IndexOf(BPSearchText);
+            if (idx > 0)
+            {
+                ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, BPSearchText, Globals.BOILING_POINT, ":");
+                chemProp.prop = Globals.BOILING_POINT;
+                chemProps.data.Add(chemProp);
+            }
+
+
+            //Code for water solubility - WSKOW
+            //Parsing line like this:     Water Solubility at 25 deg C (mg/L):  6.122
+            string WSSearchText = "Water Solubility at 25 deg C (mg/L):";
+            idx = summary.IndexOf(WSSearchText);
+            if (idx > 0)
+            {
+                ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, WSSearchText, Globals.WATER_SOLUBILITY, ":");
+                chemProp.prop = Globals.WATER_SOLUBILITY;
+                chemProp.method = "WSKOW";
+                chemProps.data.Add(chemProp);
+            }
+
+            //Code for water solubility - WATERNT
+            //Parsing line like this:     Wat Sol (v1.01 est) =  2.48 mg/L
+            string WS2SearchText = "Wat Sol (v1.01 est) =";
+            idx = summary.IndexOf(WS2SearchText);
+            if (idx > 0)
+            {
+                ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, WS2SearchText, Globals.WATER_SOLUBILITY, "=");
+                chemProp.prop = Globals.WATER_SOLUBILITY;
+                chemProp.method = "WATERNT";
+                chemProps.data.Add(chemProp);
+            }
+
+            //Code for henrys law constant
+            //Parsing line like this:     Bond Method :   3.07E-004  atm-m3/mole
+            string henrysLawSearchText = "Bond Method :";
+            idx = summary.IndexOf(henrysLawSearchText);
+            if (idx > 0)
+            {
+                ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, henrysLawSearchText, Globals.HENRY_LAW, ":");
+                chemProp.prop = Globals.HENRY_LAW;
+                chemProps.data.Add(chemProp);
+            }
+
+
+            //Code for experimental log koc
+            //Parsing line like this:     Koc    :  8229  L/kg (MCI method)
+            string logKocSearchText = "Koc    :";
+            idx = summary.IndexOf(logKocSearchText);
+            if (idx > 0)
+            {
+                ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logKocSearchText, Globals.LOG_KOC, ":");
+                chemProp.prop = Globals.LOG_KOC;
+                chemProps.data.Add(chemProp);
+            }
+
+            //Code for estimated Bio Concentration Factor regression based
+            //Parsing line like this:     Log BCF from regression-based method = 0.500 (BCF = 3.162 L/kg wet-wt)
+            string logBCFReg = "Log BCF from regression-based method";
+            idx = summary.IndexOf(logBCFReg);
+            if (idx > 0)
+            {
+                ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logBCFReg, Globals.LOG_BCF, "=");
+                chemProp.prop = Globals.LOG_BCF;
+                chemProp.method = "regression";
+                chemProps.data.Add(chemProp);
+            }
+
+            //Code for estimated Bio Concentration Factor Arnot-Gobas method
+            //Parsing line like this:     Log BCF Arnot-Gobas method (upper trophic) = 0.243 (BCF = 1.749)
+            string logBCFAG = "Log BCF Arnot-Gobas method (upper trophic)";
+            idx = summary.IndexOf(logBCFAG);
+            if (idx > 0)
+            {
+                ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logBCFAG, Globals.LOG_BCF, "=");
+                chemProp.prop = Globals.LOG_BCF;
+                chemProp.method = "Arnot-Gobas";
+                chemProps.data.Add(chemProp);
+            }
+
+            //Code for estimated Bio Accumulation Factor Arnot-Gobas method
+            //Parsing line like this:     Log BAF Arnot-Gobas method (upper trophic) = 0.243 (BAF = 1.749)
+            string logBAFAG = "Log BAF Arnot-Gobas method (upper trophic)";
+            idx = summary.IndexOf(logBAFAG);
+            if (idx > 0)
+            {
+                ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logBAFAG, Globals.LOG_BAF, "=");
+                chemProp.prop = Globals.LOG_BAF;
+                chemProp.method = "Arnot-Gobas";
+                chemProps.data.Add(chemProp);
+            }
+
+            return chemProps;
+        }
+
+        private ChemicalProperties ReadSummaryFileForMeasuredValues()
+        {
+            ChemicalProperties chemProps = new ChemicalProperties();
+
+            //string summary = ReadFile(Path.Combine(Globals.EPI_SUITE_PATH, "summary"));
+            string summary = ReadFile(Path.Combine(_tempFolder, "summary"));
+            if (string.IsNullOrWhiteSpace(summary))
+                return null;
+
+            int idx = 0;
+            //bool bLogKow = false;
+            //bool bMP = false;
 
 
             //Code for log kow
             //Parsing line like this:     Log Kow (Exper. database match) =  4.96
             string logKowSearchText = "Log Kow (Exper. database match) =";
             idx = summary.IndexOf(logKowSearchText);
-            if (idx < 0)
-                bLogKow = false;
-            else
+            //if (idx < 0)
+            //    bLogKow = false;
+            //else
+            if (idx >= 0)
             {
-                bLogKow = true;
+                //bLogKow = true;
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logKowSearchText, Globals.LOG_KOW, "=");
                 chemProp.prop = Globals.LOG_KOW;
+                chemProp.method = "measured";
                 chemProps.data.Add(chemProp);
             }
             //End code log kow
@@ -115,13 +287,15 @@ namespace EPISuiteAPI.Util
             //Parsing line like this:     MP  (exp database):  42 deg C
             string MPSearchTest = "MP  (exp database):";
             idx = summary.IndexOf(MPSearchTest);
-            if (idx < 0)
-                bMP = false;
-            else
+            //if (idx < 0)
+            //    bMP = false;
+            //else
+            if (idx >= 0)
             {
-                bMP = true;
+                //bMP = true;
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, MPSearchTest, Globals.MELTING_POINT, ":");
                 chemProp.prop = Globals.MELTING_POINT;
+                chemProp.method = "measured";
                 chemProps.data.Add(chemProp);                
             }
             //End code for melting point
@@ -135,6 +309,7 @@ namespace EPISuiteAPI.Util
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, VPSearchText, Globals.VAPOR_PRESSURE, ":");
                 chemProp.prop = Globals.VAPOR_PRESSURE;
+                chemProp.method = "measured";
                 chemProps.data.Add(chemProp);
             }
 
@@ -146,6 +321,7 @@ namespace EPISuiteAPI.Util
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, BPSearchText, Globals.BOILING_POINT, ":");
                 chemProp.prop = Globals.BOILING_POINT;
+                chemProp.method = "measured";
                 chemProps.data.Add(chemProp);
             }
 
@@ -158,6 +334,7 @@ namespace EPISuiteAPI.Util
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, WSSearchText, Globals.WATER_SOLUBILITY, "=");
                 chemProp.prop = Globals.WATER_SOLUBILITY;
+                chemProp.method = "measured";
                 chemProps.data.Add(chemProp);
             }
 
@@ -169,6 +346,7 @@ namespace EPISuiteAPI.Util
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, henrysLawSearchText, Globals.HENRY_LAW, ":");
                 chemProp.prop = Globals.HENRY_LAW;
+                chemProp.method = "measured";
                 chemProps.data.Add(chemProp);
             }
 
@@ -181,6 +359,7 @@ namespace EPISuiteAPI.Util
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logKocSearchText, Globals.LOG_KOC, ":");
                 chemProp.prop = Globals.LOG_KOC;
+                chemProp.method = "measured";
                 chemProps.data.Add(chemProp);
             }
 
@@ -290,7 +469,7 @@ namespace EPISuiteAPI.Util
                 }
 
                 ChemicalProperty chemProp = null;
-                double val;
+                //double val;
                 //if (double.TryParse(sval, out val))
                 //{
                     chemProp = new ChemicalProperty();
