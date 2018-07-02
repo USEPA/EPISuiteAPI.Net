@@ -202,8 +202,8 @@ namespace EPISuiteAPI.Util
 
 
             //Code for experimental log koc
-            //Parsing line like this:     Koc    :  8229  L/kg (MCI method)
-            string logKocSearchText = "Koc    :";
+            //Parsing line like this:     Log Koc:  3.915       (MCI method)
+            string logKocSearchText = "Log Koc:";
             idx = summary.IndexOf(logKocSearchText);
             if (idx > 0)
             {
