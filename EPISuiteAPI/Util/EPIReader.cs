@@ -232,7 +232,7 @@ namespace EPISuiteAPI.Util
             idx = summary.IndexOf(logKocSearchText, idx + 7);
             if (idx > 0)
             {
-                ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logKocSearchText, Globals.LOG_KOC, ":", idx + 7);
+                ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logKocSearchText, Globals.LOG_KOC, ":", idx);
                 chemProp.prop = Globals.LOG_KOC;
                 chemProp.method = "Kow";
                 chemProps.data.Add(chemProp);                
