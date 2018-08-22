@@ -201,7 +201,19 @@ namespace EPISuiteAPI.Util
             }
 
 
-            //Code for experimental log koc
+            //Keep these two code blocks together - START
+            //**************************************
+            //**************************************
+
+            //Getting both values of Log Koc from text block below
+            //Second value uses the index from the first property as starting index
+
+            //Soil Adsorption Coefficient(KOCWIN v2.00):
+            //Koc: 10  L / kg(MCI method)
+            //Log Koc:  1.000(MCI method)
+            //Koc: 5.602  L / kg(Kow method)
+            //Log Koc:  0.748(Kow method)
+            //Code for estimated log koc - MCI method
             //Parsing line like this:     Log Koc:  3.915       (MCI method)
             string logKocSearchText = "Log Koc:";
             idx = summary.IndexOf(logKocSearchText);
@@ -209,8 +221,25 @@ namespace EPISuiteAPI.Util
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logKocSearchText, Globals.LOG_KOC, ":");
                 chemProp.prop = Globals.LOG_KOC;
+                chemProp.method = "MCI";
                 chemProps.data.Add(chemProp);
             }
+
+            //Soil Adsorption Coefficient
+            //Code for estimated log koc
+            //Parsing line like this:     Log Koc:  0.748       (Kow method)
+            logKocSearchText = "Log Koc:";
+            idx = summary.IndexOf(logKocSearchText, idx + 7);
+            if (idx > 0)
+            {
+                ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logKocSearchText, Globals.LOG_KOC, ":", idx + 7);
+                chemProp.prop = Globals.LOG_KOC;
+                chemProp.method = "Kow";
+                chemProps.data.Add(chemProp);                
+            }
+            //Keep these two code blocks together  - END
+            //**************************************
+            //**************************************
 
             //Code for estimated Bio Concentration Factor regression based
             //Parsing line like this:     Log BCF from regression-based method = 0.500 (BCF = 3.162 L/kg wet-wt)
@@ -366,11 +395,11 @@ namespace EPISuiteAPI.Util
             return chemProps;
         }
 
-        private ChemicalProperty GetPropertyFromSummaryString(string summary, string propText, string propName, string delimeter)
+        private ChemicalProperty GetPropertyFromSummaryString(string summary, string propText, string propName, string delimeter, int startIdx = 0)
         {
             int idx;
             int idxNewLine;
-            idx = summary.IndexOf(propText);
+            idx = summary.IndexOf(propText, startIdx);
             ChemicalProperty chemProp = null;
             if (idx > 0)
             {
