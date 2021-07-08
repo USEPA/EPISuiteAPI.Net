@@ -7,7 +7,7 @@ namespace EPISuiteAPI.Util
 {
     public class Globals
     {
-        public const string EPI_SUITE_PATH = @"c:\episuite41\";
+        public const string EPI_SUITE_PATH = @"D:\episuite41\";
         public const string XSMILES = @"xsmiles";
         public const string SUMBRIEF = @"sumbrief.epi";
         public const string HENRYVAL = @"henryval";
