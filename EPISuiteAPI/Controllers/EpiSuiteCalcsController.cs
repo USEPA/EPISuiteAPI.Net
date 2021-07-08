@@ -12,6 +12,31 @@ namespace EPISuiteAPI.Controllers
     [RoutePrefix("rest/episuite")]
     public class EpiSuiteCalcsController : ApiController
     {
+        [Route("test")]
+        [HttpGet]
+        public HttpResponseMessage Test()
+        {
+            return Request.CreateResponse(System.Net.HttpStatusCode.OK, "You successfully called EPISuiteAPI");           
+        }
+
+        [Route("testcalc")]
+        [HttpGet]
+        public HttpResponseMessage TestCalc()
+        {
+            string smiles = "c1ccccc1";
+            string meltingPoint = "20.0";
+            try
+            {
+                EPIReader epiReader = new EPIReader();
+                ChemicalProperties chemProps = epiReader.GetEstimatedProperties("epiwin1.exe", smiles, meltingPoint);
+                epiReader.Close();
+                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
+            }
+            catch(Exception ex)
+            {
+                return Request.CreateResponse(System.Net.HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
 
         [Route("estimated")]
         [HttpPost]
