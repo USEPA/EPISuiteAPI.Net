@@ -30,6 +30,18 @@ namespace EPISuiteAPI.Util
                 Directory.Delete(_tempFolder, true);
         }
 
+
+        public ChemicalProperties GetHydrolysisProperty(string smiles, string propertyString)
+        {
+            string epiInputFile = WriteEpiInput(smiles);
+            RunExecutable("hydront.exe", smiles);            
+           
+            ChemicalProperties chemProps = null;
+            chemProps = ReadSummaryFileForHydrolysisHalfLife(propertyString);
+
+            return chemProps;
+
+        }
         public ChemicalProperty GetEstimatedProperty(string modelExe, string property, string smiles, double? melting_point = null)
         {
             //string tempFolder = CreateTempFolder();
@@ -58,7 +70,7 @@ namespace EPISuiteAPI.Util
             return chemProps;
         }
 
-            public ChemicalProperties GetMeasuredProperties(string modelExe, string smiles, string meltingPoint = "(null)", string logKow = "(null)")
+        public ChemicalProperties GetMeasuredProperties(string modelExe, string smiles, string meltingPoint = "(null)", string logKow = "(null)")
         {
             string epiInputFile = WriteEpiInput(smiles, meltingPoint, logKow);
             RunEPIWinExecutable(modelExe, smiles, epiInputFile);
@@ -388,8 +400,34 @@ namespace EPISuiteAPI.Util
             return chemProp;
         }
 
+        private ChemicalProperties ReadSummaryFileForHydrolysisHalfLife(string propName)
+        {
+            ChemicalProperties chemProps = new ChemicalProperties();
 
-        private string WriteXsmile(string fileContents)
+            string summary = ReadFile(Path.Combine(_tempFolder, "summary"));
+            if (string.IsNullOrWhiteSpace(summary))
+                return null;
+
+            int idx = 0;
+
+            //Parsing line like this:     Ka Half-Life at pH 7:      37.499  days
+
+            idx = summary.IndexOf(propName);
+            if (idx >= 0)
+            {
+                ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, propName, propName, ":");
+                chemProp.prop = propName;
+                chemProps.data.Add(chemProp);
+            }
+            else
+                throw new Exception("Unable to estimate rate constants for this structure");
+            
+            return chemProps;
+
+        }
+
+
+            private string WriteXsmile(string fileContents)
         {
             //Input file that Epi Suite models read
             string xsmiles = Path.Combine(_tempFolder, Globals.XSMILES);

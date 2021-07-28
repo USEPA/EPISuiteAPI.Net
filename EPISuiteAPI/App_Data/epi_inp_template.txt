@@ -14,4 +14,4 @@ CALCULATE
 1
 0.05
 (log_kow)
-0
+1

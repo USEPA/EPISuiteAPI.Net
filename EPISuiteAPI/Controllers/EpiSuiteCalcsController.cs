@@ -84,6 +84,52 @@ namespace EPISuiteAPI.Controllers
             }
         }
 
+        [Route("hydrolysis/epoxide")]
+        [HttpPost]
+        public HttpResponseMessage Epoxide(Chemical chemical)
+        {
+            try
+            {
+                string smiles = chemical.structure;
+                string meltingPoint = "";
+                if (chemical.melting_point == null)
+                    meltingPoint = "(null)";
+                else
+                    meltingPoint = chemical.melting_point.ToString();
+                EPIReader epiReader = new EPIReader();
+                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, "Ka Half-Life at pH 7");
+                epiReader.Close();
+                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(System.Net.HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        [Route("hydrolysis/thiophosphatephosphate")]
+        [HttpPost]
+        public HttpResponseMessage ThiophosphatePhosphate(Chemical chemical)
+        {
+            try
+            {
+                string smiles = chemical.structure;
+                string meltingPoint = "";
+                if (chemical.melting_point == null)
+                    meltingPoint = "(null)";
+                else
+                    meltingPoint = chemical.melting_point.ToString();
+                EPIReader epiReader = new EPIReader();
+                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, "Ka Half-Life at pH 7");
+                epiReader.Close();
+                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(System.Net.HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
         ////boilingPtDegCEstimated
         //[Route("boilingPoint/estimated")]
         //[HttpPost]

@@ -33,7 +33,8 @@
                         $("#txtOutput").val(xhr.status + " " + xhr.statusText);
                     },
 
-                });                
+                });
+                
             });
 
             function buildJSON()
@@ -44,9 +45,13 @@
                 jsn.structure = substrate;
                 //alert(jsn);
                 return jsn;
-            }            function getBaseURL()            {
+            }
+
+            function getBaseURL()
+            {
                 return window.location.origin;
-            }        })
+            }
+        })
     </script>
 
 
