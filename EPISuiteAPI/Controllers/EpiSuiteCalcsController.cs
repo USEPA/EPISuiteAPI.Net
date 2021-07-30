@@ -130,6 +130,28 @@ namespace EPISuiteAPI.Controllers
             }
         }
 
+        [Route("hydrolysis/alkylhalide")]
+        [HttpPost]
+        public HttpResponseMessage AlkylHalide(Chemical chemical)
+        {
+            return Request.CreateResponse(System.Net.HttpStatusCode.OK);
+        }
+
+        [Route("hydrolysis/ester")]
+        [HttpPost]
+        public HttpResponseMessage Ester(Chemical chemical)
+        {
+            return Request.CreateResponse(System.Net.HttpStatusCode.OK);
+        }
+
+        [Route("hydrolysis/carbamate")]
+        [HttpPost]
+        public HttpResponseMessage Carbamate(Chemical chemical)
+        {
+            return Request.CreateResponse(System.Net.HttpStatusCode.OK);
+        }
+
+
         ////boilingPtDegCEstimated
         //[Route("boilingPoint/estimated")]
         //[HttpPost]

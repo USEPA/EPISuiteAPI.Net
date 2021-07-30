@@ -37,7 +37,7 @@ namespace EPISuiteAPI.Util
             RunExecutable("hydront.exe", smiles);            
            
             ChemicalProperties chemProps = null;
-            chemProps = ReadSummaryFileForHydrolysisHalfLife(propertyString);
+            chemProps = ReadSummaryFileForHydrolysisHalfLife(propertyString, smiles);
 
             return chemProps;
 
@@ -400,7 +400,7 @@ namespace EPISuiteAPI.Util
             return chemProp;
         }
 
-        private ChemicalProperties ReadSummaryFileForHydrolysisHalfLife(string propName)
+        private ChemicalProperties ReadSummaryFileForHydrolysisHalfLife(string propName, string smiles)
         {
             ChemicalProperties chemProps = new ChemicalProperties();
 
@@ -420,7 +420,7 @@ namespace EPISuiteAPI.Util
                 chemProps.data.Add(chemProp);
             }
             else
-                throw new Exception("Unable to estimate rate constants for this structure");
+                throw new Exception("Unable to estimate rate constants for this structure: " + smiles);
             
             return chemProps;
 
