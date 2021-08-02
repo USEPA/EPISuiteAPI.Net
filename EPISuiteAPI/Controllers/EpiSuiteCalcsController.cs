@@ -98,6 +98,9 @@ namespace EPISuiteAPI.Controllers
                     meltingPoint = chemical.melting_point.ToString();
                 EPIReader epiReader = new EPIReader();
                 ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, "Ka Half-Life at pH 7");
+                if ((chemProps == null) || (chemProps.data.Count < 1))
+                    throw new Exception("Unable to estimate rate constants for this structure: " + chemical.structure);
+
                 epiReader.Close();
                 return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
             }
@@ -121,6 +124,9 @@ namespace EPISuiteAPI.Controllers
                     meltingPoint = chemical.melting_point.ToString();
                 EPIReader epiReader = new EPIReader();
                 ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, "Ka Half-Life at pH 7");
+                if ((chemProps == null) || (chemProps.data.Count < 1))
+                    throw new Exception("Unable to estimate rate constants for this structure: " + chemical.structure);
+
                 epiReader.Close();
                 return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
             }
@@ -144,6 +150,11 @@ namespace EPISuiteAPI.Controllers
                     meltingPoint = chemical.melting_point.ToString();
                 EPIReader epiReader = new EPIReader();
                 ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, "Kb Half-Life at pH 7");
+                if ((chemProps == null) || (chemProps.data.Count < 1))
+                    throw new Exception("Unable to estimate rate constants for this structure: " + chemical.structure);
+
+                chemProps.data[0].chemical = chemical.structure;
+                chemProps.data[0].method = "AlkylHalide";
                 epiReader.Close();
                 return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
             }
