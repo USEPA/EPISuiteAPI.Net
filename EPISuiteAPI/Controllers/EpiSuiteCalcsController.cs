@@ -134,21 +134,69 @@ namespace EPISuiteAPI.Controllers
         [HttpPost]
         public HttpResponseMessage AlkylHalide(Chemical chemical)
         {
-            return Request.CreateResponse(System.Net.HttpStatusCode.OK);
+            try
+            {
+                string smiles = chemical.structure;
+                string meltingPoint = "";
+                if (chemical.melting_point == null)
+                    meltingPoint = "(null)";
+                else
+                    meltingPoint = chemical.melting_point.ToString();
+                EPIReader epiReader = new EPIReader();
+                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, "Kb Half-Life at pH 7");
+                epiReader.Close();
+                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(System.Net.HttpStatusCode.InternalServerError, ex.Message);
+            }
         }
 
         [Route("hydrolysis/ester")]
         [HttpPost]
         public HttpResponseMessage Ester(Chemical chemical)
         {
-            return Request.CreateResponse(System.Net.HttpStatusCode.OK);
+            try
+            {
+                string smiles = chemical.structure;
+                string meltingPoint = "";
+                if (chemical.melting_point == null)
+                    meltingPoint = "(null)";
+                else
+                    meltingPoint = chemical.melting_point.ToString();
+                EPIReader epiReader = new EPIReader();
+                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, "Kb Half-Life at pH 7");
+                epiReader.Close();
+                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(System.Net.HttpStatusCode.InternalServerError, ex.Message);
+            }
         }
 
         [Route("hydrolysis/carbamate")]
         [HttpPost]
         public HttpResponseMessage Carbamate(Chemical chemical)
         {
-            return Request.CreateResponse(System.Net.HttpStatusCode.OK);
+            try
+            {
+                string smiles = chemical.structure;
+                string meltingPoint = "";
+                if (chemical.melting_point == null)
+                    meltingPoint = "(null)";
+                else
+                    meltingPoint = chemical.melting_point.ToString();
+                EPIReader epiReader = new EPIReader();
+                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, "Kb Half-Life at pH 7");
+                epiReader.Close();
+                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(System.Net.HttpStatusCode.InternalServerError, ex.Message);
+            }
         }
 
 
