@@ -90,6 +90,7 @@ namespace EPISuiteAPI.Controllers
         {
             try
             {
+                string method = "Epoxide";
                 string smiles = chemical.structure;
                 string meltingPoint = "";
                 if (chemical.melting_point == null)
@@ -99,7 +100,10 @@ namespace EPISuiteAPI.Controllers
                 EPIReader epiReader = new EPIReader();
                 ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, "Ka Half-Life at pH 7");
                 if ((chemProps == null) || (chemProps.data.Count < 1))
-                    throw new Exception("Unable to estimate rate constants for this structure: " + chemical.structure);
+                    throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
+
+                chemProps.data[0].chemical = smiles;
+                chemProps.data[0].method = method;
 
                 epiReader.Close();
                 return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
@@ -116,6 +120,7 @@ namespace EPISuiteAPI.Controllers
         {
             try
             {
+                string method = "ThiophosphatePhosphate";
                 string smiles = chemical.structure;
                 string meltingPoint = "";
                 if (chemical.melting_point == null)
@@ -125,7 +130,10 @@ namespace EPISuiteAPI.Controllers
                 EPIReader epiReader = new EPIReader();
                 ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, "Ka Half-Life at pH 7");
                 if ((chemProps == null) || (chemProps.data.Count < 1))
-                    throw new Exception("Unable to estimate rate constants for this structure: " + chemical.structure);
+                    throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
+
+                chemProps.data[0].chemical = smiles;
+                chemProps.data[0].method = method;
 
                 epiReader.Close();
                 return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
@@ -142,6 +150,7 @@ namespace EPISuiteAPI.Controllers
         {
             try
             {
+                string method = "AlkylHalide";
                 string smiles = chemical.structure;
                 string meltingPoint = "";
                 if (chemical.melting_point == null)
@@ -151,10 +160,10 @@ namespace EPISuiteAPI.Controllers
                 EPIReader epiReader = new EPIReader();
                 ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, "Kb Half-Life at pH 7");
                 if ((chemProps == null) || (chemProps.data.Count < 1))
-                    throw new Exception("Unable to estimate rate constants for this structure: " + chemical.structure);
+                    throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
 
-                chemProps.data[0].chemical = chemical.structure;
-                chemProps.data[0].method = "AlkylHalide";
+                chemProps.data[0].chemical = smiles;
+                chemProps.data[0].method = method;
                 epiReader.Close();
                 return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
             }
@@ -170,6 +179,7 @@ namespace EPISuiteAPI.Controllers
         {
             try
             {
+                string method = "Ester";
                 string smiles = chemical.structure;
                 string meltingPoint = "";
                 if (chemical.melting_point == null)
@@ -178,6 +188,11 @@ namespace EPISuiteAPI.Controllers
                     meltingPoint = chemical.melting_point.ToString();
                 EPIReader epiReader = new EPIReader();
                 ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, "Kb Half-Life at pH 7");
+                if ((chemProps == null) || (chemProps.data.Count < 1))
+                    throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
+
+                chemProps.data[0].chemical = smiles;
+                chemProps.data[0].method = method;
                 epiReader.Close();
                 return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
             }
@@ -193,6 +208,7 @@ namespace EPISuiteAPI.Controllers
         {
             try
             {
+                string method = "Carbamate";
                 string smiles = chemical.structure;
                 string meltingPoint = "";
                 if (chemical.melting_point == null)
@@ -201,6 +217,42 @@ namespace EPISuiteAPI.Controllers
                     meltingPoint = chemical.melting_point.ToString();
                 EPIReader epiReader = new EPIReader();
                 ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, "Kb Half-Life at pH 7");
+                if ((chemProps == null) || (chemProps.data.Count < 1))
+                    throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
+
+                chemProps.data[0].chemical = smiles;
+                chemProps.data[0].method = method;
+
+                epiReader.Close();
+                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(System.Net.HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        [Route("hydrolysis/halomethane")]
+        [HttpPost]
+        public HttpResponseMessage Halomethane(Chemical chemical)
+        {
+            try
+            {
+                string method = "Halomethane";
+                string smiles = chemical.structure;
+                string meltingPoint = "";
+                if (chemical.melting_point == null)
+                    meltingPoint = "(null)";
+                else
+                    meltingPoint = chemical.melting_point.ToString();
+                EPIReader epiReader = new EPIReader();
+                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, "Kb Half-Life at pH 7");
+                if ((chemProps == null) || (chemProps.data.Count < 1))
+                    throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
+
+                chemProps.data[0].chemical = smiles;
+                chemProps.data[0].method = method;
+
                 epiReader.Close();
                 return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
             }
