@@ -13,6 +13,7 @@ namespace EPISuiteAPI.Models
         public string calc { get; set; }
         public string method { get; set; }
         public string data { get; set; }
+        public string units { get; set; }
 
         public ChemicalProperty()
         {
@@ -21,6 +22,7 @@ namespace EPISuiteAPI.Models
             calc = "epi";
             method = null;
             data = null;
+            units = null;
 
         }
     }
