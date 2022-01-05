@@ -395,6 +395,7 @@ namespace EPISuiteAPI.Util
                 chemProp.prop = propName;
                 //chemProp.propertyvalue = Convert.ToDouble(tokens2[0].Trim());                
                 chemProp.data = tokens2[0].Trim();
+                chemProp.units = tokens2[2].Trim();
             }
 
             return chemProp;
