@@ -33,8 +33,8 @@ namespace EPISuiteAPI.Util
 
         public ChemicalProperties GetHydrolysisProperty(string smiles, string propertyString)
         {
-            string epiInputFile = WriteEpiInput(smiles);
-            RunExecutable("hydront.exe", smiles);            
+            string xsmilesFile = WriteHydroNTInput(smiles);
+            RunExecutable("hydront.exe", smiles);
            
             ChemicalProperties chemProps = null;
             chemProps = ReadSummaryFileForHydrolysisHalfLife(propertyString, smiles);
@@ -477,6 +477,30 @@ namespace EPISuiteAPI.Util
             WriteFile(epiInputFile, fileContents);
 
             return epiInputFile;
+        }
+
+        /// <summary>
+        /// Reads the xsmiles.txt template and write out file with input data
+        /// </summary>
+        /// <param name="smiles">The structure to process</param>
+        /// <returns></returns>
+        private string WriteHydroNTInput(string smiles)
+        {
+            //Read the xsmiles template file.
+            //Replace tags with values
+            //Write out modified xsmiles file
+            string serverPath = System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data");
+            string xsmilesTemplate = Path.Combine(serverPath, "xsmiles_template.txt");
+
+            string fileContents = ReadFile(xsmilesTemplate);
+
+            fileContents = fileContents.Replace("(smiles)", smiles);
+            //fileContents = fileContents.Replace("(melting_point)", meltingPoint);
+            //fileContents = fileContents.Replace("(log_kow)", logKow);
+            string xsmilesFile = Path.Combine(_tempFolder, "xsmiles");
+            WriteFile(xsmilesFile, fileContents);
+
+            return xsmilesFile;
         }
 
         private int RunProcess(ProcessStartInfo processStartInfo)

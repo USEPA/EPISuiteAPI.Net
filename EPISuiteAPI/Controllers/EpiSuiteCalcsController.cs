@@ -98,7 +98,7 @@ namespace EPISuiteAPI.Controllers
                 else
                     meltingPoint = chemical.melting_point.ToString();
                 EPIReader epiReader = new EPIReader();
-                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, "Ka Half-Life at pH 7");
+                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, method);
                 if ((chemProps == null) || (chemProps.data.Count < 1))
                     throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
 
@@ -128,7 +128,7 @@ namespace EPISuiteAPI.Controllers
                 else
                     meltingPoint = chemical.melting_point.ToString();
                 EPIReader epiReader = new EPIReader();
-                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, "Ka Half-Life at pH 7");
+                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, method);
                 if ((chemProps == null) || (chemProps.data.Count < 1))
                     throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
 
@@ -158,7 +158,7 @@ namespace EPISuiteAPI.Controllers
                 else
                     meltingPoint = chemical.melting_point.ToString();
                 EPIReader epiReader = new EPIReader();
-                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, "Kb Half-Life at pH 7");
+                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, method);
                 if ((chemProps == null) || (chemProps.data.Count < 1))
                     throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
 
@@ -187,7 +187,7 @@ namespace EPISuiteAPI.Controllers
                 else
                     meltingPoint = chemical.melting_point.ToString();
                 EPIReader epiReader = new EPIReader();
-                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, "Kb Half-Life at pH 7");
+                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, method);
                 if ((chemProps == null) || (chemProps.data.Count < 1))
                     throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
 
@@ -216,7 +216,7 @@ namespace EPISuiteAPI.Controllers
                 else
                     meltingPoint = chemical.melting_point.ToString();
                 EPIReader epiReader = new EPIReader();
-                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, "Kb Half-Life at pH 7");
+                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, method);
                 if ((chemProps == null) || (chemProps.data.Count < 1))
                     throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
 
@@ -246,7 +246,7 @@ namespace EPISuiteAPI.Controllers
                 else
                     meltingPoint = chemical.melting_point.ToString();
                 EPIReader epiReader = new EPIReader();
-                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, "Kb Half-Life at pH 7");
+                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, method);
                 if ((chemProps == null) || (chemProps.data.Count < 1))
                     throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
 
