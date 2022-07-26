@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Diagnostics;
 using EPISuiteAPI.Models;
 using EPISuiteAPI.Util;
@@ -411,15 +412,51 @@ namespace EPISuiteAPI.Util
             if (string.IsNullOrWhiteSpace(summary))
                 return null;
 
+            //HYDROWIN Program(v2.00) Results:
+            //================================
+            //SMILES : CNC(=O)Oc1c2ccccc2ccc1
+            //CHEM   : 
+            //MOL FOR: C12 H11 N1 O2 
+            //MOL WT : 201.23
+            //--------------------------- HYDROWIN v2.00 Results ---------------------------
+
+
+            //            R1
+            //CARBAMATE:     >N-C(=O)-O-R3            R1: -CH3                
+            //            R2                         R2: -H                  
+            //                            R3: -Naphthyl           
+            //Kb hydrolysis at atom #  3:  4.680E+000  L/mol-sec
+
+            //Total Kb for pH > 8 at 25 deg C :  4.680E+000  L/mol-sec
+            //Kb Half-Life at pH 8:       1.714 days   
+            //Kb Half-Life at pH 7:      17.143  days   
+
+
+            //In the case above, 'CARBAMATE' would be the property name.
+            //We are looking for the line:
+            // Kb hydrolysis at atom #  3:  4.680E+000  L/mol-sec
+
             int idx = 0;
-
-            //Parsing line like this:     Ka Half-Life at pH 7:      37.499  days
-
-            idx = summary.IndexOf(propName);
+            idx = summary.IndexOf(propName, StringComparison.InvariantCultureIgnoreCase);
             if (idx >= 0)
             {
-                ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, propName, propName, ":");
+                int idx2 = summary.IndexOf("Kb hydrolysis at atom", idx, StringComparison.InvariantCultureIgnoreCase);
+                string summary2 = summary.Substring(idx2);
+                string[] lines = summary2.Split(Environment.NewLine.ToCharArray());
+                string s1 = lines[0];
+                string[] tokens = s1.Split(':');
+                string[] tokens2 = Regex.Split(tokens[1].Trim(), @"\s+");
+
+                string data = tokens2[0].Trim();
+                double dval;
+                if (double.TryParse(data, out dval))
+                    dval = 0.6931 / (dval * 0.00000010);
+                else
+                    dval = double.NaN;
+
+                ChemicalProperty chemProp = new ChemicalProperty();
                 chemProp.prop = propName;
+                chemProp.data = dval.ToString();
                 chemProps.data.Add(chemProp);
             }
             else
@@ -559,10 +596,10 @@ namespace EPISuiteAPI.Util
 
         public void RunExecutable(string modelExe, string smiles)
         {
-            string xsmilesFile = WriteXsmile(smiles);
+            //string xsmilesFile = WriteXsmile(smiles);
             //string command = Path.Combine(Globals.EPI_SUITE_PATH, modelExe);
             string command = Path.Combine(_tempFolder, modelExe);
-            string args = "episrc " + xsmilesFile;
+            string args = "episrc xsmiles";
 
             ProcessStartInfo psi = CreateProcessStartInfo(command, args);
             int exitCode = RunProcess(psi);
