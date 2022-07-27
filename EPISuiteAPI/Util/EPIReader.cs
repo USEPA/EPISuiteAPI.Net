@@ -43,6 +43,18 @@ namespace EPISuiteAPI.Util
             return chemProps;
 
         }
+
+        public ChemicalProperties GetThioPhosphateHydrolysisProperty(string smiles, string propertyString)
+        {
+            string xsmilesFile = WriteHydroNTInput(smiles);
+            RunExecutable("hydront.exe", smiles);
+
+            ChemicalProperties chemProps = null;
+            chemProps = ReadSummaryFileForPhosphateThiophosphateHalfLife(propertyString, smiles);
+
+            return chemProps;
+
+        }
         public ChemicalProperty GetEstimatedProperty(string modelExe, string property, string smiles, double? melting_point = null)
         {
             //string tempFolder = CreateTempFolder();
@@ -450,13 +462,19 @@ namespace EPISuiteAPI.Util
                 string data = tokens2[0].Trim();
                 double dval;
                 if (double.TryParse(data, out dval))
-                    dval = 0.6931 / (dval * 0.00000010);
+                {
+                    decimal decval = 0.6931M / ((decimal)dval * 1.0e-7M);
+                    //Convert from seconds to day 60*60*24=86400
+                    decval = decval / 86400.0M;
+                    dval = (double)decval;
+                }
                 else
                     dval = double.NaN;
 
                 ChemicalProperty chemProp = new ChemicalProperty();
-                chemProp.prop = propName;
+                chemProp.prop = "Kb";
                 chemProp.data = dval.ToString();
+                chemProp.units = "days";
                 chemProps.data.Add(chemProp);
             }
             else
@@ -466,8 +484,85 @@ namespace EPISuiteAPI.Util
 
         }
 
+        //Phosphate and Thiophosphate reactions produce a different summary file than other reactions
+        //It will produce both Kn and Kb values
+        private ChemicalProperties ReadSummaryFileForPhosphateThiophosphateHalfLife(string propName, string smiles)
+        {
+            ChemicalProperties chemProps = new ChemicalProperties();
 
-            private string WriteXsmile(string fileContents)
+            string summary = ReadFile(Path.Combine(_tempFolder, "summary"));
+            if (string.IsNullOrWhiteSpace(summary))
+                return null;
+
+            //HYDROWIN Program(v2.00) Results:
+            //================================
+            //SMILES : COP(=S)(OC)Oc1cc(C)c(cc1)N(=O)(=O)
+            //CHEM   : 
+            //MOL FOR: C9 H12 N1 O5 P1 S1 
+            //MOL WT : 277.23
+            //--------------------------- HYDROWIN v2.00 Results ---------------------------
+            //
+            //Thiophosphate: S=P-({O,S}-R)3           
+            //R1{-O-}: -CH3                
+            //R1{-O-}: -Phenyl [2 frags]   
+            //R1{-O-}: -CH3                
+
+            //Log Kn (/sec) = -6.8193
+            //Kn = 1.516e-007/sec = 9.097e-006/min
+            //= 0.0005458/hr = 0.0131/day
+
+            //Log Kb (/M-sec) = -2.0617
+            //Kb = 0.008675/M-sec = 0.5205/M-min
+            //= 31.23/M-hr = 749.5/M-day
+
+            //Log Ka : ** Acid-catalyzed rates can NOT be estimated at this time.
+
+
+            //In the case above, 'Thiophosphate' would be the property name.
+            //We are looking for the lines:
+            // Kn = 1.516e-007/sec = 9.097e-006/min
+            // Kb = 0.008675/M-sec = 0.5205/M-min
+
+
+            string[] lines = summary.Split(Environment.NewLine.ToCharArray());
+            string[] propTypes = new string[] { "Kn", "Kb" };
+            foreach (string line in lines)
+            {
+                string tmpLine = line.Trim();
+                foreach (string propType in propTypes)
+                {
+                    Match match = Regex.Match(tmpLine, "^" + propType);
+                    if (match.Success)
+                    {
+                        string[] tokens = tmpLine.Split(new char[] { '=', '/' });
+                        string data = tokens[1].Trim();
+                        double dval;
+                        if (double.TryParse(data, out dval))
+                        {
+                            decimal decval = 0.6931M / ((decimal)dval * 1.0e-7M);
+                            //Convert from seconds to day 60*60*24=86400
+                            decval = decval / 86400.0M;
+                            dval = (double)decval;
+                        }
+                        else
+                            dval = double.NaN;
+
+                        ChemicalProperty chemProp = new ChemicalProperty();
+                        chemProp.prop = propType;
+                        chemProp.data = dval.ToString();
+                        chemProp.units = "days";
+                        chemProps.data.Add(chemProp);
+                    }
+
+                }
+            }
+
+            return chemProps;
+
+        }
+
+
+        private string WriteXsmile(string fileContents)
         {
             //Input file that Epi Suite models read
             string xsmiles = Path.Combine(_tempFolder, Globals.XSMILES);

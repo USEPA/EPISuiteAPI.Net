@@ -128,12 +128,16 @@ namespace EPISuiteAPI.Controllers
                 else
                     meltingPoint = chemical.melting_point.ToString();
                 EPIReader epiReader = new EPIReader();
-                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, method);
+                ChemicalProperties chemProps = epiReader.GetThioPhosphateHydrolysisProperty(chemical.structure, method);
                 if ((chemProps == null) || (chemProps.data.Count < 1))
                     throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
 
-                chemProps.data[0].chemical = smiles;
-                chemProps.data[0].method = method;
+                foreach (ChemicalProperty prop in chemProps.data)
+                {
+                    prop.chemical = smiles;
+                    prop.method = method;
+                }
+                
 
                 epiReader.Close();
                 return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
