@@ -99,13 +99,14 @@ namespace EPISuiteAPI.Controllers
                     meltingPoint = chemical.melting_point.ToString();
                 EPIReader epiReader = new EPIReader();
                 ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, method);
+                epiReader.Close();
+
                 if ((chemProps == null) || (chemProps.data.Count < 1))
                     throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
 
                 chemProps.data[0].chemical = smiles;
                 chemProps.data[0].method = method;
-
-                epiReader.Close();
+                
                 return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
             }
             catch (Exception ex)
@@ -201,12 +202,14 @@ namespace EPISuiteAPI.Controllers
                     meltingPoint = chemical.melting_point.ToString();
                 EPIReader epiReader = new EPIReader();
                 ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, method);
+                epiReader.Close();
+
                 if ((chemProps == null) || (chemProps.data.Count < 1))
                     throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
 
                 chemProps.data[0].chemical = smiles;
                 chemProps.data[0].method = method;
-                epiReader.Close();
+                
                 return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
             }
             catch (Exception ex)
@@ -230,12 +233,14 @@ namespace EPISuiteAPI.Controllers
                     meltingPoint = chemical.melting_point.ToString();
                 EPIReader epiReader = new EPIReader();
                 ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, method);
+                epiReader.Close();
+
                 if ((chemProps == null) || (chemProps.data.Count < 1))
                     throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
 
                 chemProps.data[0].chemical = smiles;
                 chemProps.data[0].method = method;
-                epiReader.Close();
+                
                 return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
             }
             catch (Exception ex)
@@ -259,13 +264,14 @@ namespace EPISuiteAPI.Controllers
                     meltingPoint = chemical.melting_point.ToString();
                 EPIReader epiReader = new EPIReader();
                 ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, method);
+                epiReader.Close();
+
                 if ((chemProps == null) || (chemProps.data.Count < 1))
                     throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
 
                 chemProps.data[0].chemical = smiles;
                 chemProps.data[0].method = method;
-
-                epiReader.Close();
+                
                 return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
             }
             catch (Exception ex)
@@ -289,13 +295,14 @@ namespace EPISuiteAPI.Controllers
                     meltingPoint = chemical.melting_point.ToString();
                 EPIReader epiReader = new EPIReader();
                 ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, method);
+                epiReader.Close();
+
                 if ((chemProps == null) || (chemProps.data.Count < 1))
                     throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
 
                 chemProps.data[0].chemical = smiles;
                 chemProps.data[0].method = method;
-
-                epiReader.Close();
+                
                 return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
             }
             catch (Exception ex)
