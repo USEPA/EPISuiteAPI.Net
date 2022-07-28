@@ -114,38 +114,76 @@ namespace EPISuiteAPI.Controllers
             }
         }
 
-        [Route("hydrolysis/thiophosphatephosphate")]
+        [Route("hydrolysis/phosphate")]
         [HttpPost]
-        public HttpResponseMessage ThiophosphatePhosphate(Chemical chemical)
+        public HttpResponseMessage Phosphate(Chemical chemical)
         {
+            string method = "Phosphate";
+            string smiles = chemical.structure;
+            string meltingPoint = "";
+            ChemicalProperties chemProps = null;
+
+            if (chemical.melting_point == null)
+                meltingPoint = "(null)";
+            else
+                meltingPoint = chemical.melting_point.ToString();
             try
             {
-                string method = "ThiophosphatePhosphate";
-                string smiles = chemical.structure;
-                string meltingPoint = "";
-                if (chemical.melting_point == null)
-                    meltingPoint = "(null)";
-                else
-                    meltingPoint = chemical.melting_point.ToString();
                 EPIReader epiReader = new EPIReader();
-                ChemicalProperties chemProps = epiReader.GetThioPhosphateHydrolysisProperty(chemical.structure, method);
-                if ((chemProps == null) || (chemProps.data.Count < 1))
-                    throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
-
-                foreach (ChemicalProperty prop in chemProps.data)
-                {
-                    prop.chemical = smiles;
-                    prop.method = method;
-                }
-                
-
+                chemProps = epiReader.GetThioPhosphateHydrolysisProperty(chemical.structure, method);
                 epiReader.Close();
-                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
             }
             catch (Exception ex)
             {
                 return Request.CreateResponse(System.Net.HttpStatusCode.InternalServerError, ex.Message);
             }
+            if ((chemProps == null) || (chemProps.data.Count < 1))
+                throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
+
+            foreach (ChemicalProperty prop in chemProps.data)
+            {
+                prop.chemical = smiles;
+                prop.method = method;
+            }
+
+            return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
+
+        }
+
+        [Route("hydrolysis/thiophosphate")]
+        [HttpPost]
+        public HttpResponseMessage ThiophosphatePhosphate(Chemical chemical)
+        {            
+            string method = "Thiophosphate";
+            string smiles = chemical.structure;
+            string meltingPoint = "";
+            ChemicalProperties chemProps = null;
+
+            if (chemical.melting_point == null)
+                meltingPoint = "(null)";
+            else
+                meltingPoint = chemical.melting_point.ToString();
+            try
+            {
+                EPIReader epiReader = new EPIReader();
+                chemProps = epiReader.GetThioPhosphateHydrolysisProperty(chemical.structure, method);
+                epiReader.Close();
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(System.Net.HttpStatusCode.InternalServerError, ex.Message);
+            }
+            if ((chemProps == null) || (chemProps.data.Count < 1))
+                throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
+
+            foreach (ChemicalProperty prop in chemProps.data)
+            {
+                prop.chemical = smiles;
+                prop.method = method;
+            }
+                                
+            return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);            
+            
         }
 
         [Route("hydrolysis/alkylhalide")]
