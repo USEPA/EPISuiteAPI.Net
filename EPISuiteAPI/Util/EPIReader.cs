@@ -32,13 +32,13 @@ namespace EPISuiteAPI.Util
         }
 
 
-        public ChemicalProperties GetHydrolysisProperty(string smiles, string propertyString)
+        public ChemicalProperties GetHydrolysisProperty(string smiles, string propertyString, string acid_base= "Kb")
         {
             string xsmilesFile = WriteHydroNTInput(smiles);
             RunExecutable("hydront.exe", smiles);
            
             ChemicalProperties chemProps = null;
-            chemProps = ReadSummaryFileForHydrolysisHalfLife(propertyString, smiles);
+            chemProps = ReadSummaryFileForHydrolysisHalfLife(propertyString, smiles, acid_base);
 
             return chemProps;
 
@@ -416,7 +416,7 @@ namespace EPISuiteAPI.Util
             return chemProp;
         }
 
-        private ChemicalProperties ReadSummaryFileForHydrolysisHalfLife(string propName, string smiles)
+        private ChemicalProperties ReadSummaryFileForHydrolysisHalfLife(string propName, string smiles, string acid_base)
         {
             ChemicalProperties chemProps = new ChemicalProperties();
 
@@ -452,7 +452,8 @@ namespace EPISuiteAPI.Util
             idx = summary.IndexOf(propName, StringComparison.InvariantCultureIgnoreCase);
             if (idx >= 0)
             {
-                int idx2 = summary.IndexOf("Kb hydrolysis at atom", idx, StringComparison.InvariantCultureIgnoreCase);
+                string searchStr = acid_base + " hydrolysis at atom";
+                int idx2 = summary.IndexOf(searchStr, idx, StringComparison.InvariantCultureIgnoreCase);
                 string summary2 = summary.Substring(idx2);
                 string[] lines = summary2.Split(Environment.NewLine.ToCharArray());
                 string s1 = lines[0];
@@ -463,10 +464,9 @@ namespace EPISuiteAPI.Util
                 double dval;
                 if (double.TryParse(data, out dval))
                 {
-                    decimal decval = 0.6931M / ((decimal)dval * 1.0e-7M);
+                    //decimal decval = 0.6931M / ((decimal)dval * 1.0e-7M);
                     //Convert from seconds to day 60*60*24=86400
-                    decval = decval / 86400.0M;
-                    dval = (double)decval;
+                    dval = dval * 86400.0;
                 }
                 else
                     dval = double.NaN;
@@ -539,10 +539,10 @@ namespace EPISuiteAPI.Util
                         double dval;
                         if (double.TryParse(data, out dval))
                         {
-                            decimal decval = 0.6931M / ((decimal)dval * 1.0e-7M);
+                            //decimal decval = 0.6931M / ((decimal)dval * 1.0e-7M);
                             //Convert from seconds to day 60*60*24=86400
-                            decval = decval / 86400.0M;
-                            dval = (double)decval;
+                            dval = dval * 86400.0;
+                            //dval = (double)decval;
                         }
                         else
                             dval = double.NaN;

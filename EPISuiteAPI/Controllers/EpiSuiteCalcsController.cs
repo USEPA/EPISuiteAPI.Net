@@ -98,7 +98,7 @@ namespace EPISuiteAPI.Controllers
                 else
                     meltingPoint = chemical.melting_point.ToString();
                 EPIReader epiReader = new EPIReader();
-                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, method);
+                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, method, "Ka");
                 epiReader.Close();
 
                 if ((chemProps == null) || (chemProps.data.Count < 1))
@@ -153,7 +153,7 @@ namespace EPISuiteAPI.Controllers
 
         [Route("hydrolysis/thiophosphate")]
         [HttpPost]
-        public HttpResponseMessage ThiophosphatePhosphate(Chemical chemical)
+        public HttpResponseMessage Thiophosphate(Chemical chemical)
         {            
             string method = "Thiophosphate";
             string smiles = chemical.structure;
@@ -187,13 +187,44 @@ namespace EPISuiteAPI.Controllers
             
         }
 
+        [Route("hydrolysis/halomethane")]
+        [HttpPost]
+        public HttpResponseMessage Halomethane(Chemical chemical)
+        {
+            try
+            {
+                string method = "Halomethane";
+                string smiles = chemical.structure;
+                string meltingPoint = "";
+                if (chemical.melting_point == null)
+                    meltingPoint = "(null)";
+                else
+                    meltingPoint = chemical.melting_point.ToString();
+                EPIReader epiReader = new EPIReader();
+                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, method);
+                epiReader.Close();
+
+                if ((chemProps == null) || (chemProps.data.Count < 1))
+                    throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
+
+                chemProps.data[0].chemical = smiles;
+                chemProps.data[0].method = method;
+
+                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(System.Net.HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
         [Route("hydrolysis/alkylhalide")]
         [HttpPost]
         public HttpResponseMessage AlkylHalide(Chemical chemical)
         {
             try
             {
-                string method = "AlkylHalide";
+                string method = "Alkyl Halide";
                 string smiles = chemical.structure;
                 string meltingPoint = "";
                 if (chemical.melting_point == null)
@@ -280,36 +311,7 @@ namespace EPISuiteAPI.Controllers
             }
         }
 
-        [Route("hydrolysis/halomethane")]
-        [HttpPost]
-        public HttpResponseMessage Halomethane(Chemical chemical)
-        {
-            try
-            {
-                string method = "Halomethane";
-                string smiles = chemical.structure;
-                string meltingPoint = "";
-                if (chemical.melting_point == null)
-                    meltingPoint = "(null)";
-                else
-                    meltingPoint = chemical.melting_point.ToString();
-                EPIReader epiReader = new EPIReader();
-                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, method);
-                epiReader.Close();
-
-                if ((chemProps == null) || (chemProps.data.Count < 1))
-                    throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
-
-                chemProps.data[0].chemical = smiles;
-                chemProps.data[0].method = method;
-                
-                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateResponse(System.Net.HttpStatusCode.InternalServerError, ex.Message);
-            }
-        }
+        
 
 
         ////boilingPtDegCEstimated
