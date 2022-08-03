@@ -448,12 +448,20 @@ namespace EPISuiteAPI.Util
             //We are looking for the line:
             // Kb hydrolysis at atom #  3:  4.680E+000  L/mol-sec
 
+            ChemicalProperty chemProp = new ChemicalProperty();
+            chemProp.prop = "Kb";            
+            chemProp.units = "days";
+
             int idx = 0;
             idx = summary.IndexOf(propName, StringComparison.InvariantCultureIgnoreCase);
             if (idx >= 0)
             {
-                string searchStr = acid_base + " hydrolysis at atom";
+                string searchStr = acid_base + " hydrolysis at ";
                 int idx2 = summary.IndexOf(searchStr, idx, StringComparison.InvariantCultureIgnoreCase);
+                if (idx2 < 0)
+                {
+                    chemProp.data = double.NaN.ToString();
+                }
                 string summary2 = summary.Substring(idx2);
                 string[] lines = summary2.Split(Environment.NewLine.ToCharArray());
                 string s1 = lines[0];
@@ -464,17 +472,17 @@ namespace EPISuiteAPI.Util
                 double dval;
                 if (double.TryParse(data, out dval))
                 {
-                    //decimal decval = 0.6931M / ((decimal)dval * 1.0e-7M);
+                    double decval = 0.6931 / (dval * 1.0e-7);
                     //Convert from seconds to day 60*60*24=86400
                     dval = dval * 86400.0;
                 }
                 else
                     dval = double.NaN;
 
-                ChemicalProperty chemProp = new ChemicalProperty();
-                chemProp.prop = "Kb";
+                
+                //chemProp.prop = "Kb";
                 chemProp.data = dval.ToString();
-                chemProp.units = "days";
+                //chemProp.units = "days";
                 chemProps.data.Add(chemProp);
             }
             else
