@@ -422,7 +422,7 @@ namespace EPISuiteAPI.Util
 
             string summary = ReadFile(Path.Combine(_tempFolder, "summary"));
             if (string.IsNullOrWhiteSpace(summary))
-                return null;
+                throw new Exception("Unable to estimate rate constants for this structure: " + smiles);
 
             //HYDROWIN Program(v2.00) Results:
             //================================
@@ -460,7 +460,8 @@ namespace EPISuiteAPI.Util
                 int idx2 = summary.IndexOf(searchStr, idx, StringComparison.InvariantCultureIgnoreCase);
                 if (idx2 < 0)
                 {
-                    chemProp.data = double.NaN.ToString();
+                    //chemProp.data = double.NaN.ToString();
+                    throw new Exception("Unable to estimate rate constants for this structure: " + smiles);
                 }
                 string summary2 = summary.Substring(idx2);
                 string[] lines = summary2.Split(Environment.NewLine.ToCharArray());
@@ -469,12 +470,12 @@ namespace EPISuiteAPI.Util
                 string[] tokens2 = Regex.Split(tokens[1].Trim(), @"\s+");
 
                 string data = tokens2[0].Trim();
-                double dval;
+                double dval = 0.0;
                 if (double.TryParse(data, out dval))
                 {
-                    double decval = 0.6931 / (dval * 1.0e-7);
+                    dval = 0.6931 / (dval * 1.0e-7);
                     //Convert from seconds to day 60*60*24=86400
-                    dval = dval * 86400.0;
+                    dval = dval / 86400.0;
                 }
                 else
                     dval = double.NaN;
@@ -500,7 +501,7 @@ namespace EPISuiteAPI.Util
 
             string summary = ReadFile(Path.Combine(_tempFolder, "summary"));
             if (string.IsNullOrWhiteSpace(summary))
-                return null;
+                throw new Exception("Unable to estimate rate constants for this structure: " + smiles);
 
             //HYDROWIN Program(v2.00) Results:
             //================================
@@ -547,10 +548,9 @@ namespace EPISuiteAPI.Util
                         double dval;
                         if (double.TryParse(data, out dval))
                         {
-                            //decimal decval = 0.6931M / ((decimal)dval * 1.0e-7M);
+                            dval = 0.6931 / (dval * 1.0e-7);
                             //Convert from seconds to day 60*60*24=86400
-                            dval = dval * 86400.0;
-                            //dval = (double)decval;
+                            dval = dval / 86400.0;                            
                         }
                         else
                             dval = double.NaN;
