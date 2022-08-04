@@ -422,7 +422,8 @@ namespace EPISuiteAPI.Util
 
             string summary = ReadFile(Path.Combine(_tempFolder, "summary"));
             if (string.IsNullOrWhiteSpace(summary))
-                throw new Exception("Unable to estimate rate constants for this structure: " + smiles);
+                return null;
+                //throw new Exception("Unable to estimate rate constants for this structure: " + smiles);
 
             //HYDROWIN Program(v2.00) Results:
             //================================
@@ -460,8 +461,8 @@ namespace EPISuiteAPI.Util
                 int idx2 = summary.IndexOf(searchStr, idx, StringComparison.InvariantCultureIgnoreCase);
                 if (idx2 < 0)
                 {
-                    //chemProp.data = double.NaN.ToString();
-                    throw new Exception("Unable to estimate rate constants for this structure: " + smiles);
+                    return null;
+                    //throw new Exception("Unable to estimate rate constants for this structure: " + smiles);
                 }
                 string summary2 = summary.Substring(idx2);
                 string[] lines = summary2.Split(Environment.NewLine.ToCharArray());
@@ -480,14 +481,15 @@ namespace EPISuiteAPI.Util
                 else
                     dval = double.NaN;
 
-                
+
                 //chemProp.prop = "Kb";
                 chemProp.data = dval.ToString();
                 //chemProp.units = "days";
                 chemProps.data.Add(chemProp);
             }
             else
-                throw new Exception("Unable to estimate rate constants for this structure: " + smiles);
+                return null;
+                //throw new Exception("Unable to estimate rate constants for this structure: " + smiles);
             
             return chemProps;
 
@@ -501,7 +503,8 @@ namespace EPISuiteAPI.Util
 
             string summary = ReadFile(Path.Combine(_tempFolder, "summary"));
             if (string.IsNullOrWhiteSpace(summary))
-                throw new Exception("Unable to estimate rate constants for this structure: " + smiles);
+                return null;
+                //throw new Exception("Unable to estimate rate constants for this structure: " + smiles);
 
             //HYDROWIN Program(v2.00) Results:
             //================================
