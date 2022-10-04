@@ -73,9 +73,9 @@ namespace EPISuiteAPI.Util
 
         }
 
-        public ChemicalProperties GetEstimatedProperties(string modelExe, string smiles, string meltingPoint = "(null)", string logKow = "(null)")
+        public ChemicalProperties GetEstimatedProperties(string modelExe, string smiles, string meltingPoint = "(null)", string logKow = "(null)", string epiLink = "0")
         {
-            string epiInputFile = WriteEpiInput(smiles, meltingPoint, logKow);
+            string epiInputFile = WriteEpiInput(smiles, meltingPoint, logKow, epiLink);
             RunEPIWinExecutable(modelExe, smiles, epiInputFile);
             ChemicalProperties chemProps = null;
             chemProps = ReadSummaryFileForEstimatedValues();
@@ -83,9 +83,9 @@ namespace EPISuiteAPI.Util
             return chemProps;
         }
 
-        public ChemicalProperties GetMeasuredProperties(string modelExe, string smiles, string meltingPoint = "(null)", string logKow = "(null)")
+        public ChemicalProperties GetMeasuredProperties(string modelExe, string smiles, string meltingPoint = "(null)", string logKow = "(null)", string epiLink = "0")
         {
-            string epiInputFile = WriteEpiInput(smiles, meltingPoint, logKow);
+            string epiInputFile = WriteEpiInput(smiles, meltingPoint, logKow, epiLink);
             RunEPIWinExecutable(modelExe, smiles, epiInputFile);
             ChemicalProperties chemProps = null;
             chemProps = ReadSummaryFileForMeasuredValues();
@@ -133,8 +133,8 @@ namespace EPISuiteAPI.Util
 
 
             //Code for log kow
-            //Parsing line like this:     Log Kow (KOWWIN v1.68 estimate) = 4.40
-            string logKowSearchText = "Log Kow (KOWWIN v1.68 estimate) =";
+            //Parsing line like this:     Log Kow (KOWWIN v1.68 estimate) = 4.40            
+            string logKowSearchText = "Log Kow(KOWWIN v1.68 estimate) =";
             idx = summary.IndexOf(logKowSearchText);
             //if (idx < 0)
                 //bLogKow = false;
@@ -142,7 +142,8 @@ namespace EPISuiteAPI.Util
             if (idx >= 0)
             {
                 //bLogKow = true;
-                ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logKowSearchText, Globals.LOG_KOW, "=");
+                //ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logKowSearchText, Globals.LOG_KOW, "=");
+                ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logKowSearchText, Globals.LOG_KOW, ":");
                 chemProp.prop = Globals.LOG_KOW;
                 chemProps.data.Add(chemProp);
             }
@@ -403,7 +404,11 @@ namespace EPISuiteAPI.Util
                 //string line = summary.Substring(idx, (idxNewLine - idx) - 1);
                 string line = summary.Substring(idx, (idxNewLine - idx));
                 string[] tokens = line.Split(delimeter.ToCharArray());
+                
+                //Not sure why this changed - somehow the summary
                 string[] tokens2 = tokens[1].Trim().Split(" ".ToCharArray());
+                //string[] tokens2 = tokens[1].Trim().Split(":".ToCharArray());
+                
                 chemProp = new ChemicalProperty();
                 chemProp.prop = propName;
                 //chemProp.propertyvalue = Convert.ToDouble(tokens2[0].Trim());                
@@ -603,7 +608,7 @@ namespace EPISuiteAPI.Util
         /// <param name="meltingPoint">Optional input melting point value</param>
         /// <param name="logKow">Optional input log kow value</param>
         /// <returns></returns>
-        private string WriteEpiInput(string smiles, string meltingPoint = "(null)", string logKow = "(null)")
+        private string WriteEpiInput(string smiles, string meltingPoint = "(null)", string logKow = "(null)", string epiLink="0")
         {
             //Read the input template file.
             //Replace tags with values
@@ -615,7 +620,8 @@ namespace EPISuiteAPI.Util
 
             fileContents = fileContents.Replace("(smiles)", smiles);
             fileContents = fileContents.Replace("(melting_point)", meltingPoint);
-            fileContents = fileContents.Replace("(log_kow)", logKow);            
+            fileContents = fileContents.Replace("(log_kow)", logKow);
+            fileContents = fileContents.Replace("(epi_link)", epiLink);
             string epiInputFile = Path.Combine(_tempFolder, "epi_inp.txt");
             WriteFile(epiInputFile, fileContents);
 
