@@ -34,9 +34,11 @@ namespace EPISuiteAPI.Util
 
         public ChemicalProperties GetHydrolysisProperty(string smiles, string propertyString, string acid_base= "Kb")
         {
-            string xsmilesFile = WriteHydroNTInput(smiles);
-            RunExecutable("hydront.exe", smiles);
-           
+            //string xsmilesFile = WriteHydroNTInput(smiles);
+            string epiInputFile = WriteEpiInput(smiles, epiLink : "1");
+            //RunExecutable("epiwin1.exe", smiles);
+            RunEPIWinExecutable("epiwin1.exe", smiles, epiInputFile);
+
             ChemicalProperties chemProps = null;
             chemProps = ReadSummaryFileForHydrolysisHalfLife(propertyString, smiles, acid_base);
 
@@ -78,7 +80,7 @@ namespace EPISuiteAPI.Util
             string epiInputFile = WriteEpiInput(smiles, meltingPoint, logKow, epiLink);
             RunEPIWinExecutable(modelExe, smiles, epiInputFile);
             ChemicalProperties chemProps = null;
-            chemProps = ReadSummaryFileForEstimatedValues();
+            chemProps = ReadSummaryFileForEstimatedValues(smiles);
 
             return chemProps;
         }
@@ -118,7 +120,7 @@ namespace EPISuiteAPI.Util
 
         }
 
-        private ChemicalProperties ReadSummaryFileForEstimatedValues()
+        private ChemicalProperties ReadSummaryFileForEstimatedValues(string smiles)
         {
             ChemicalProperties chemProps = new ChemicalProperties();
 
@@ -134,7 +136,7 @@ namespace EPISuiteAPI.Util
 
             //Code for log kow
             //Parsing line like this:     Log Kow (KOWWIN v1.68 estimate) = 4.40            
-            string logKowSearchText = "Log Kow(KOWWIN v1.68 estimate) =";
+            string logKowSearchText = "Log Kow (KOWWIN v1.68 estimate) =";
             idx = summary.IndexOf(logKowSearchText);
             //if (idx < 0)
                 //bLogKow = false;
@@ -142,8 +144,8 @@ namespace EPISuiteAPI.Util
             if (idx >= 0)
             {
                 //bLogKow = true;
-                //ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logKowSearchText, Globals.LOG_KOW, "=");
-                ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logKowSearchText, Globals.LOG_KOW, ":");
+                ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logKowSearchText, Globals.LOG_KOW, "=");
+                chemProp.chemical = smiles;
                 chemProp.prop = Globals.LOG_KOW;
                 chemProps.data.Add(chemProp);
             }
@@ -161,7 +163,9 @@ namespace EPISuiteAPI.Util
             {
                 //bMP = true;
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, MPSearchTest, Globals.MELTING_POINT, ":");
+                chemProp.chemical = smiles;
                 chemProp.prop = Globals.MELTING_POINT;
+                chemProp.units = "C";
                 chemProps.data.Add(chemProp);
             }
             //End code for melting point
@@ -174,7 +178,9 @@ namespace EPISuiteAPI.Util
             if (idx > 0)
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, VPSearchText, Globals.VAPOR_PRESSURE, ":");
+                chemProp.chemical = smiles;
                 chemProp.prop = Globals.VAPOR_PRESSURE;
+                chemProp.units = "mm Hg";
                 chemProps.data.Add(chemProp);
             }
 
@@ -186,7 +192,9 @@ namespace EPISuiteAPI.Util
             if (idx > 0)
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, BPSearchText, Globals.BOILING_POINT, ":");
+                chemProp.chemical = smiles;
                 chemProp.prop = Globals.BOILING_POINT;
+                chemProp.units = "C";
                 chemProps.data.Add(chemProp);
             }
 
@@ -198,8 +206,10 @@ namespace EPISuiteAPI.Util
             if (idx > 0)
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, WSSearchText, Globals.WATER_SOLUBILITY, ":");
+                chemProp.chemical = smiles;
                 chemProp.prop = Globals.WATER_SOLUBILITY;
                 chemProp.method = "WSKOW";
+                chemProp.units = "mg/L";
                 chemProps.data.Add(chemProp);
             }
 
@@ -210,8 +220,10 @@ namespace EPISuiteAPI.Util
             if (idx > 0)
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, WS2SearchText, Globals.WATER_SOLUBILITY, "=");
+                chemProp.chemical = smiles;
                 chemProp.prop = Globals.WATER_SOLUBILITY;
                 chemProp.method = "WATERNT";
+                chemProp.units = "mg/L";
                 chemProps.data.Add(chemProp);
             }
 
@@ -222,6 +234,7 @@ namespace EPISuiteAPI.Util
             if (idx > 0)
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, henrysLawSearchText, Globals.HENRY_LAW, ":");
+                chemProp.chemical = smiles;
                 chemProp.prop = Globals.HENRY_LAW;
                 chemProps.data.Add(chemProp);
             }
@@ -234,6 +247,7 @@ namespace EPISuiteAPI.Util
             if (idx > 0)
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logKocSearchText, Globals.LOG_KOC, ":");
+                chemProp.chemical = smiles;
                 chemProp.prop = Globals.LOG_KOC;
                 chemProps.data.Add(chemProp);
             }
@@ -245,6 +259,7 @@ namespace EPISuiteAPI.Util
             if (idx > 0)
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logBCFReg, Globals.LOG_BCF, "=");
+                chemProp.chemical = smiles;
                 chemProp.prop = Globals.LOG_BCF;
                 chemProp.method = "regression";
                 chemProps.data.Add(chemProp);
@@ -257,6 +272,7 @@ namespace EPISuiteAPI.Util
             if (idx > 0)
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logBCFAG, Globals.LOG_BCF, "=");
+                chemProp.chemical = smiles;
                 chemProp.prop = Globals.LOG_BCF;
                 chemProp.method = "Arnot-Gobas";
                 chemProps.data.Add(chemProp);
@@ -269,6 +285,7 @@ namespace EPISuiteAPI.Util
             if (idx > 0)
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logBAFAG, Globals.LOG_BAF, "=");
+                chemProp.chemical = smiles;
                 chemProp.prop = Globals.LOG_BAF;
                 chemProp.method = "Arnot-Gobas";
                 chemProps.data.Add(chemProp);
@@ -621,7 +638,7 @@ namespace EPISuiteAPI.Util
             fileContents = fileContents.Replace("(smiles)", smiles);
             fileContents = fileContents.Replace("(melting_point)", meltingPoint);
             fileContents = fileContents.Replace("(log_kow)", logKow);
-            fileContents = fileContents.Replace("(epi_link)", epiLink);
+            fileContents = fileContents.Replace("(epi_links)", epiLink);
             string epiInputFile = Path.Combine(_tempFolder, "epi_inp.txt");
             WriteFile(epiInputFile, fileContents);
 
