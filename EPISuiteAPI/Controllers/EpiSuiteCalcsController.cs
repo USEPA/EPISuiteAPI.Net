@@ -104,8 +104,11 @@ namespace EPISuiteAPI.Controllers
                 if ((chemProps == null) || (chemProps.data.Count < 1))
                     throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
 
-                chemProps.data[0].chemical = smiles;
-                chemProps.data[0].method = method;
+                foreach (ChemicalProperty chemProp in chemProps.data)
+                {
+                    chemProp.chemical = smiles;
+                    chemProp.method = method;
+                }
                 
                 return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
             }

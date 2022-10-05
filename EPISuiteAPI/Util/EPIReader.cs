@@ -588,6 +588,7 @@ namespace EPISuiteAPI.Util
                         chemProp.prop = propType;
                         chemProp.data = dval.ToString();
                         chemProp.units = "days";
+                        chemProp.chemical = smiles;
                         chemProps.data.Add(chemProp);
                     }
 
