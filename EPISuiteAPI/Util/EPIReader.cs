@@ -440,7 +440,7 @@ namespace EPISuiteAPI.Util
 
         private ChemicalProperties ReadSummaryFileForHydrolysisHalfLife(string propName, string smiles, string acid_base)
         {
-            ChemicalProperties chemProps = new ChemicalProperties();
+            ChemicalProperties chemProps = null;
 
             string summary = ReadFile(Path.Combine(_tempFolder, "summary"));
             if (string.IsNullOrWhiteSpace(summary))
@@ -471,21 +471,22 @@ namespace EPISuiteAPI.Util
             //We are looking for the line:
             // Kb hydrolysis at atom #  3:  4.680E+000  L/mol-sec
 
-            ChemicalProperty chemProp = new ChemicalProperty();
-            chemProp.prop = "Kb";            
-            chemProp.units = "days";
+            
 
             int idx = 0;
             idx = summary.IndexOf(propName, StringComparison.InvariantCultureIgnoreCase);
-            if (idx >= 0)
+            //if (idx >= 0)
+            while (idx > 0)
             {
                 string searchStr = acid_base + " hydrolysis at ";
                 int idx2 = summary.IndexOf(searchStr, idx, StringComparison.InvariantCultureIgnoreCase);
                 if (idx2 < 0)
-                {
-                    return null;
-                    //throw new Exception("Unable to estimate rate constants for this structure: " + smiles);
-                }
+                    break;
+
+                ChemicalProperty chemProp = new ChemicalProperty();
+                chemProp.prop = acid_base;
+                chemProp.units = "days";
+
                 string summary2 = summary.Substring(idx2);
                 string[] lines = summary2.Split(Environment.NewLine.ToCharArray());
                 string s1 = lines[0];
@@ -507,12 +508,15 @@ namespace EPISuiteAPI.Util
                 //chemProp.prop = "Kb";
                 chemProp.data = dval.ToString();
                 //chemProp.units = "days";
+                if (chemProps == null)
+                    chemProps = new ChemicalProperties();
+
                 chemProps.data.Add(chemProp);
+                idx = idx2 + lines[0].Length;
             }
-            else
-                return null;
-                //throw new Exception("Unable to estimate rate constants for this structure: " + smiles);
-            
+            //else
+            //    return null;
+                //throw new Exception("Unable to estimate rate constants for this structure: " + smiles);            
             return chemProps;
 
         }
