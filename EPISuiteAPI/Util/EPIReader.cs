@@ -240,15 +240,23 @@ namespace EPISuiteAPI.Util
             }
 
 
+            //We are getting two values for log kow MCI method, and Kow method
             //Code for experimental log koc
-            //Parsing line like this:     Koc    :  8229  L/kg (MCI method)
-            string logKocSearchText = "Koc    :";
+            //Parsing line like this:     Log Koc:  3.695       (MCI method)
+            string logKocSearchText = "Log Koc: ";
             idx = summary.IndexOf(logKocSearchText);
             if (idx > 0)
             {
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, logKocSearchText, Globals.LOG_KOC, ":");
                 chemProp.chemical = smiles;
                 chemProp.prop = Globals.LOG_KOC;
+                chemProp.method = "MCI";
+                chemProps.data.Add(chemProp);
+
+                chemProp = GetPropertyFromSummaryString(summary, logKocSearchText, Globals.LOG_KOC, ":", idx + logKocSearchText.Length);
+                chemProp.chemical = smiles;
+                chemProp.prop = Globals.LOG_KOC;
+                chemProp.method = "Kow";
                 chemProps.data.Add(chemProp);
             }
 
@@ -409,11 +417,11 @@ namespace EPISuiteAPI.Util
             return chemProps;
         }
 
-        private ChemicalProperty GetPropertyFromSummaryString(string summary, string propText, string propName, string delimeter)
+        private ChemicalProperty GetPropertyFromSummaryString(string summary, string propText, string propName, string delimeter, int startPosition= 0)
         {
             int idx;
             int idxNewLine;
-            idx = summary.IndexOf(propText);
+            idx = summary.IndexOf(propText, startPosition);
             ChemicalProperty chemProp = null;
             if (idx > 0)
             {
