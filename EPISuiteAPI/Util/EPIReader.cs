@@ -58,6 +58,18 @@ namespace EPISuiteAPI.Util
             return chemProps;
 
         }
+
+        public ChemicalProperties GetAnhydrideHydrolysisProperty(string smiles, string propertyString)
+        {
+            string xsmilesFile = WriteHydroNTInput(smiles);
+            RunExecutable("hydront.exe", smiles);            
+
+            ChemicalProperties chemProps = null;
+            chemProps = ReadSummaryFileForAnhydrideHalfLife(propertyString, smiles);
+
+            return chemProps;
+
+        }
         public ChemicalProperty GetEstimatedProperty(string modelExe, string property, string smiles, double? melting_point = null)
         {
             //string tempFolder = CreateTempFolder();
@@ -649,16 +661,15 @@ namespace EPISuiteAPI.Util
             //For this calculator we are using the following:
             //  anhydride half-life = ((0.6931 / ((kb #2 + kb #5 )* 1.0E-7)))
             string[] lines = summary.Split(Environment.NewLine.ToCharArray());
-            double Kb1 = 0.0;
-            double Kb2 = 0.0;
-
+            double dval = 0.0;
             foreach (string line in lines)
             {
                 if (count >= 2)
                     break;
 
                 string tmpLine = line.Trim();
-                Match match = Regex.Match(tmpLine, "^" + "Kb");
+                //Match match = Regex.Match(tmpLine, "^" + "Kb");
+                Match match = Regex.Match(tmpLine, "^" + "Total Kb for pH");                
                 if (match.Success)
                 {
                     string[] tokens = tmpLine.Split(new char[] { ':' });
@@ -666,28 +677,28 @@ namespace EPISuiteAPI.Util
                         return null;
 
                     string data = tokens[1].Trim();
-                    double dval;
+                    tokens = data.Split();
+                    data = tokens[0].Trim();
+                    
                     if (double.TryParse(data, out dval))
                     {
-                        if (count == 0)
-                            Kb1 = dval;
-                        if (count == 1)
-                            Kb2 = dval;
-                        //dval = 0.6931 / (dval * 1.0e-7);
+  
+                        dval = 0.6931 / (dval * 1.0e-7);
                         //Convert from seconds to day 60*60*24=86400
-                        //dval = dval / 86400.0;
+                        dval = dval / 86400.0;
                     }
                     else
                         dval = double.NaN;
                     
                     count++;
+                    break;
                 }
             }
 
             double val  = (0.6931 / ((Kb1 + Kb2) * 1.0e-7));
             ChemicalProperty chemProp = new ChemicalProperty();
             chemProp.prop = "Kb";
-            chemProp.data = val.ToString();
+            chemProp.data = dval.ToString();
             chemProp.units = "days";
             chemProp.chemical = smiles;
             chemProps.data.Add(chemProp);

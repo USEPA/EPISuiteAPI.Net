@@ -328,7 +328,7 @@ namespace EPISuiteAPI.Controllers
                 else
                     meltingPoint = chemical.melting_point.ToString();
                 EPIReader epiReader = new EPIReader();
-                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, method);
+                ChemicalProperties chemProps = epiReader.GetAnhydrideHydrolysisProperty(chemical.structure, method);
                 epiReader.Close();
 
                 if ((chemProps == null) || (chemProps.data.Count < 1))
