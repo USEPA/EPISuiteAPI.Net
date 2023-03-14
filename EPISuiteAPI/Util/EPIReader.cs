@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Diagnostics;
 using EPISuiteAPI.Models;
 using EPISuiteAPI.Util;
+using System.Data.Entity.Core.Metadata.Edm;
 
 
 namespace EPISuiteAPI.Util
@@ -17,7 +18,7 @@ namespace EPISuiteAPI.Util
         //string _epiWinExe = "epiwin1.exe";
         //string _epiInput = "epi_inp.txt";
 
-        string _tempFolder { get; set;}
+        string _tempFolder { get; set; }
 
         public EPIReader()
         {
@@ -32,10 +33,10 @@ namespace EPISuiteAPI.Util
         }
 
 
-        public ChemicalProperties GetHydrolysisProperty(string smiles, string propertyString, string acid_base= "Kb")
+        public ChemicalProperties GetHydrolysisProperty(string smiles, string propertyString, string acid_base = "Kb")
         {
             //string xsmilesFile = WriteHydroNTInput(smiles);
-            string epiInputFile = WriteEpiInput(smiles, epiLink : "1");
+            string epiInputFile = WriteEpiInput(smiles, epiLink: "1");
             //RunExecutable("epiwin1.exe", smiles);
             RunEPIWinExecutable("epiwin1.exe", smiles, epiInputFile);
 
@@ -139,7 +140,7 @@ namespace EPISuiteAPI.Util
             string logKowSearchText = "Log Kow (KOWWIN v1.68 estimate) =";
             idx = summary.IndexOf(logKowSearchText);
             //if (idx < 0)
-                //bLogKow = false;
+            //bLogKow = false;
             //else
             if (idx >= 0)
             {
@@ -157,7 +158,7 @@ namespace EPISuiteAPI.Util
             string MPSearchTest = "Melting Pt (deg C):";
             idx = summary.IndexOf(MPSearchTest);
             //if (idx < 0)
-                //bMP = false;
+            //bMP = false;
             //else
             if (idx >= 0)
             {
@@ -347,7 +348,7 @@ namespace EPISuiteAPI.Util
                 ChemicalProperty chemProp = GetPropertyFromSummaryString(summary, MPSearchTest, Globals.MELTING_POINT, ":");
                 chemProp.prop = Globals.MELTING_POINT;
                 chemProp.method = "measured";
-                chemProps.data.Add(chemProp);                
+                chemProps.data.Add(chemProp);
             }
             //End code for melting point
 
@@ -417,7 +418,7 @@ namespace EPISuiteAPI.Util
             return chemProps;
         }
 
-        private ChemicalProperty GetPropertyFromSummaryString(string summary, string propText, string propName, string delimeter, int startPosition= 0)
+        private ChemicalProperty GetPropertyFromSummaryString(string summary, string propText, string propName, string delimeter, int startPosition = 0)
         {
             int idx;
             int idxNewLine;
@@ -429,11 +430,11 @@ namespace EPISuiteAPI.Util
                 //string line = summary.Substring(idx, (idxNewLine - idx) - 1);
                 string line = summary.Substring(idx, (idxNewLine - idx));
                 string[] tokens = line.Split(delimeter.ToCharArray());
-                
+
                 //Not sure why this changed - somehow the summary
                 string[] tokens2 = tokens[1].Trim().Split(" ".ToCharArray());
                 //string[] tokens2 = tokens[1].Trim().Split(":".ToCharArray());
-                
+
                 chemProp = new ChemicalProperty();
                 chemProp.prop = propName;
                 //chemProp.propertyvalue = Convert.ToDouble(tokens2[0].Trim());                
@@ -453,7 +454,7 @@ namespace EPISuiteAPI.Util
             string summary = ReadFile(Path.Combine(_tempFolder, "summary"));
             if (string.IsNullOrWhiteSpace(summary))
                 return null;
-                //throw new Exception("Unable to estimate rate constants for this structure: " + smiles);
+            //throw new Exception("Unable to estimate rate constants for this structure: " + smiles);
 
             //HYDROWIN Program(v2.00) Results:
             //================================
@@ -479,7 +480,7 @@ namespace EPISuiteAPI.Util
             //We are looking for the line:
             // Kb hydrolysis at atom #  3:  4.680E+000  L/mol-sec
 
-            
+
 
             int idx = 0;
             idx = summary.IndexOf(propName, StringComparison.InvariantCultureIgnoreCase);
@@ -524,7 +525,7 @@ namespace EPISuiteAPI.Util
             }
             //else
             //    return null;
-                //throw new Exception("Unable to estimate rate constants for this structure: " + smiles);            
+            //throw new Exception("Unable to estimate rate constants for this structure: " + smiles);            
             return chemProps;
 
         }
@@ -538,7 +539,7 @@ namespace EPISuiteAPI.Util
             string summary = ReadFile(Path.Combine(_tempFolder, "summary"));
             if (string.IsNullOrWhiteSpace(summary))
                 return null;
-                //throw new Exception("Unable to estimate rate constants for this structure: " + smiles);
+            //throw new Exception("Unable to estimate rate constants for this structure: " + smiles);
 
             //HYDROWIN Program(v2.00) Results:
             //================================
@@ -569,7 +570,6 @@ namespace EPISuiteAPI.Util
             // Kn = 1.516e-007/sec = 9.097e-006/min
             // Kb = 0.008675/M-sec = 0.5205/M-min
 
-
             string[] lines = summary.Split(Environment.NewLine.ToCharArray());
             string[] propTypes = new string[] { "Kn", "Kb" };
             foreach (string line in lines)
@@ -587,7 +587,7 @@ namespace EPISuiteAPI.Util
                         {
                             dval = 0.6931 / (dval * 1.0e-7);
                             //Convert from seconds to day 60*60*24=86400
-                            dval = dval / 86400.0;                            
+                            dval = dval / 86400.0;
                         }
                         else
                             dval = double.NaN;
@@ -599,13 +599,103 @@ namespace EPISuiteAPI.Util
                         chemProp.chemical = smiles;
                         chemProps.data.Add(chemProp);
                     }
-
                 }
             }
 
             return chemProps;
 
         }
+        //Anhydride reactions produce a different summary file than other reactions
+        //It will produce two Kb values
+        private ChemicalProperties ReadSummaryFileForAnhydrideHalfLife(string propName, string smiles)
+        {
+            ChemicalProperties chemProps = new ChemicalProperties();
+
+            string summary = ReadFile(Path.Combine(_tempFolder, "summary"));
+            if (string.IsNullOrWhiteSpace(summary))
+                return null;
+
+            
+            //HYDROWIN Program (v2.00) Results:
+            //================================
+            //SMILES : O=C(C)OC(=O)(C)
+            //CHEM   : 
+            //MOL FOR: C4 H6 O3 
+            //MOL WT : 102.09
+            //--------------------------- HYDROWIN v2.00 Results ---------------------------
+            //Hydrolyzable Function detected:  Anhydrides        
+
+            //-C-C(=O)-O-C(=O)-C-
+
+            //Acid anhydrides react with water to form the corresponding acid.
+            //Neutral hydrolysis half-lives of some Anhydrides (25 deg C,
+            //Bunton et al, 1963; Bunton & Fenndler, 1965, Hawkins, 1975):
+            //Acetic:   4.3 min          Phthalic:  1.5 minutes
+            //Succinic: 4.3 min          Benzoic :  27.8 minutes
+            //Glutaric: 4.4 minutes      Trimethylacetic anhydride: 24.2 hours
+
+            //Branching may slow the hydrolysis rate.
+            //Hydrolysis rate increases with pH.
+
+            //ESTER:  R1-C(=O)-O-R2                   R1: -CH3                
+            //                                        R2: -CO-CH3             
+            //Kb hydrolysis at atom #  2:  1.285E+003  L/mol-sec
+
+            //ESTER:  R1-C(=O)-O-R2                   R1: -CH3                
+            //                                        R2: -CO-CH3             
+            //Kb hydrolysis at atom #  5:  1.285E+003  L/mol-sec
+            
+            int count = 0;
+            //For this calculator we are using the following:
+            //  anhydride half-life = ((0.6931 / ((kb #2 + kb #5 )* 1.0E-7)))
+            string[] lines = summary.Split(Environment.NewLine.ToCharArray());
+            double Kb1 = 0.0;
+            double Kb2 = 0.0;
+
+            foreach (string line in lines)
+            {
+                if (count >= 2)
+                    break;
+
+                string tmpLine = line.Trim();
+                Match match = Regex.Match(tmpLine, "^" + "Kb");
+                if (match.Success)
+                {
+                    string[] tokens = tmpLine.Split(new char[] { ':' });
+                    if (tokens == null || tokens.Length < 2)
+                        return null;
+
+                    string data = tokens[1].Trim();
+                    double dval;
+                    if (double.TryParse(data, out dval))
+                    {
+                        if (count == 0)
+                            Kb1 = dval;
+                        if (count == 1)
+                            Kb2 = dval;
+                        //dval = 0.6931 / (dval * 1.0e-7);
+                        //Convert from seconds to day 60*60*24=86400
+                        //dval = dval / 86400.0;
+                    }
+                    else
+                        dval = double.NaN;
+                    
+                    count++;
+                }
+            }
+
+            double val  = (0.6931 / ((Kb1 + Kb2) * 1.0e-7));
+            ChemicalProperty chemProp = new ChemicalProperty();
+            chemProp.prop = "Kb";
+            chemProp.data = val.ToString();
+            chemProp.units = "days";
+            chemProp.chemical = smiles;
+            chemProps.data.Add(chemProp);
+
+            return chemProps;
+
+        }
+
 
 
         private string WriteXsmile(string fileContents)
@@ -638,12 +728,12 @@ namespace EPISuiteAPI.Util
         /// <param name="meltingPoint">Optional input melting point value</param>
         /// <param name="logKow">Optional input log kow value</param>
         /// <returns></returns>
-        private string WriteEpiInput(string smiles, string meltingPoint = "(null)", string logKow = "(null)", string epiLink="0")
+        private string WriteEpiInput(string smiles, string meltingPoint = "(null)", string logKow = "(null)", string epiLink = "0")
         {
             //Read the input template file.
             //Replace tags with values
             //Write out modified epi suite input file
-            string serverPath = System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data");            
+            string serverPath = System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data");
             string epiInputTemplate = Path.Combine(serverPath, "epi_inp_template.txt");
 
             string fileContents = ReadFile(epiInputTemplate);
@@ -687,7 +777,7 @@ namespace EPISuiteAPI.Util
             int exitCode;
             //ProcessStartInfo processInfo = CreateProcessStartInfo(command, args);
             Process process = Process.Start(processStartInfo);
-            
+
             process.WaitForExit();
             exitCode = process.ExitCode;
             return exitCode;
@@ -699,7 +789,7 @@ namespace EPISuiteAPI.Util
             //string randomFolder = null;
             try
             {
-                               
+
                 //Ouput file that Epi Suite produces
                 string outFile = Path.Combine(_tempFolder, Globals.HENRYVAL);
                 if (!File.Exists(outFile))
@@ -716,11 +806,11 @@ namespace EPISuiteAPI.Util
                 //double val;
                 //if (double.TryParse(sval, out val))
                 //{
-                    chemProp = new ChemicalProperty();
-                    //chemProp.propertyvalue = val;
-                    chemProp.data = sval;
-                    chemProp.prop = property;
-                    chemProp.chemical = smiles;
+                chemProp = new ChemicalProperty();
+                //chemProp.propertyvalue = val;
+                chemProp.data = sval;
+                chemProp.prop = property;
+                chemProp.chemical = smiles;
                 //}
 
                 return chemProp;
@@ -746,7 +836,7 @@ namespace EPISuiteAPI.Util
             ProcessStartInfo psi = CreateProcessStartInfo(command, args);
             int exitCode = RunProcess(psi);
             if (exitCode != 0)
-                throw new Exception(string.Format("Error executing {0} with argument {1} .", modelExe, smiles));            
+                throw new Exception(string.Format("Error executing {0} with argument {1} .", modelExe, smiles));
 
         }
 
@@ -836,11 +926,11 @@ namespace EPISuiteAPI.Util
                 //DeleteFolder(tempFolder);
             }
         }
-        
+
 
         private ProcessStartInfo CreateProcessStartInfo(string command, string args)
-        {           
-            ProcessStartInfo processInfo;            
+        {
+            ProcessStartInfo processInfo;
             processInfo = new ProcessStartInfo(command);
             processInfo.Arguments = args;
             processInfo.CreateNoWindow = true;
@@ -884,7 +974,7 @@ namespace EPISuiteAPI.Util
         }
 
 
-public void DeleteFolder(string folder)
+        public void DeleteFolder(string folder)
         {
             if (Directory.Exists(folder))
                 Directory.Delete(folder, true);
@@ -906,13 +996,13 @@ public void DeleteFolder(string folder)
             return contents;
         }
 
+
         private void WriteFile(string file, string contents)
         {
             using (StreamWriter sw = new StreamWriter(file))
             {
-                sw.Write(contents);      
+                sw.Write(contents);
             }
         }
-
     }
 }

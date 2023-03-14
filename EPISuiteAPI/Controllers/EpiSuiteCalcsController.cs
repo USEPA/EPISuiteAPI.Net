@@ -314,7 +314,38 @@ namespace EPISuiteAPI.Controllers
             }
         }
 
-        
+        [Route("hydrolysis/anhydride")]
+        [HttpPost]
+        public HttpResponseMessage Anhydride(Chemical chemical)
+        {
+            try
+            {
+                string method = "Anhydride";
+                string smiles = chemical.structure;
+                string meltingPoint = "";
+                if (chemical.melting_point == null)
+                    meltingPoint = "(null)";
+                else
+                    meltingPoint = chemical.melting_point.ToString();
+                EPIReader epiReader = new EPIReader();
+                ChemicalProperties chemProps = epiReader.GetHydrolysisProperty(chemical.structure, method);
+                epiReader.Close();
+
+                if ((chemProps == null) || (chemProps.data.Count < 1))
+                    throw new Exception($"Unable to estimate {method} rate constants for {smiles}");
+
+                chemProps.data[0].chemical = smiles;
+                chemProps.data[0].method = method;
+
+                return Request.CreateResponse(System.Net.HttpStatusCode.OK, chemProps);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(System.Net.HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
 
 
         ////boilingPtDegCEstimated
