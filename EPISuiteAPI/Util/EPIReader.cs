@@ -695,7 +695,7 @@ namespace EPISuiteAPI.Util
                 }
             }
 
-            double val  = (0.6931 / ((Kb1 + Kb2) * 1.0e-7));
+            //double val  = (0.6931 / ((Kb1 + Kb2) * 1.0e-7));
             ChemicalProperty chemProp = new ChemicalProperty();
             chemProp.prop = "Kb";
             chemProp.data = dval.ToString();
