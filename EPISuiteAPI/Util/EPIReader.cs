@@ -597,7 +597,10 @@ namespace EPISuiteAPI.Util
                         double dval;
                         if (double.TryParse(data, out dval))
                         {
-                            dval = 0.6931 / (dval * 1.0e-7);
+                            if (propType == "Kn")
+                                dval = 0.6931 / (dval);
+                            else
+                                dval = 0.6931 / (dval * 1.0e-7);
                             //Convert from seconds to day 60*60*24=86400
                             dval = dval / 86400.0;
                         }
