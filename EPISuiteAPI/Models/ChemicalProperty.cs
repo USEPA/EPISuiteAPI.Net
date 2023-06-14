@@ -14,6 +14,7 @@ namespace EPISuiteAPI.Models
         public string method { get; set; }
         public string data { get; set; }
         public string units { get; set; }
+        public string atom_number { get; set; }
 
         public ChemicalProperty()
         {

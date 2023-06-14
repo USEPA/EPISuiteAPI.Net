@@ -512,6 +512,12 @@ namespace EPISuiteAPI.Util
                 string[] lines = summary2.Split(Environment.NewLine.ToCharArray());
                 string s1 = lines[0];
                 string[] tokens = s1.Split(':');
+
+                //Pulling out atom number from string:
+                //Kb hydrolysis at atom #  3
+                string atom_num = tokens[0].Split('#')[1].Trim();
+                chemProp.atom_number = atom_num;
+
                 string[] tokens2 = Regex.Split(tokens[1].Trim(), @"\s+");
 
                 string data = tokens2[0].Trim();
