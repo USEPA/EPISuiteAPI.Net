@@ -956,6 +956,7 @@ namespace EPISuiteAPI.Util
             processInfo.CreateNoWindow = true;
             processInfo.UseShellExecute = false;
             processInfo.WorkingDirectory = _tempFolder;
+            processInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
             return processInfo;
         }
